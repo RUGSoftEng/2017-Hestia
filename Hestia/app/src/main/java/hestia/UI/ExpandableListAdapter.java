@@ -33,14 +33,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     private ArrayList<ArrayList<DeviceBar>> listDataChild;
     private Context context;
 
-    private ClientInteractionController c;
+    private ClientInteractionController cic;
     private final static String TAG = "ExpandableList";
 
     public ExpandableListAdapter(ArrayList<ArrayList<DeviceBar>> listChildData, Context context) {
         Log.i(TAG, "Constructor");
         this.listDataChild = listChildData;
         this.context = context;
-        this.c = ClientInteractionController.getInstance();
+        this.cic = ClientInteractionController.getInstance();
     }
 
     @Override
@@ -70,8 +70,31 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
         ImageView imageview = (ImageView) convertView.findViewById(R.id.imageview);
 
-        Switch s = dBar.getHestiaSwitch().getActivatorSwitch();
-        dBar.setLayout(convertView, R.id.light_switch);
+//        Switch s = dBar.getHestiaSwitch().getActivatorSwitch();
+//        dBar.setLayout(convertView, R.id.light_switch);
+
+        final HestiaSwitch hestiaSwitch = new HestiaSwitch(dBar.getDevice(), dBar.getA(), convertView, R.id.light_switch);
+        hestiaSwitch.getActivatorSwitch().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Log.i(TAG, "I am being clicked");
+                Activator a = hestiaSwitch.getActivator();
+                int activatorId = a.getId();
+
+                ActivatorState state = a.getState();
+                if (b) {
+                    // True
+                    state.setState(true);
+                    cic.setActivatorState(hestiaSwitch.getDevice(), activatorId, state);
+                    Log.i(TAG, "I Am being set to true");
+                } else {
+                    // False
+                    state.setState(false);
+                    cic.setActivatorState(hestiaSwitch.getDevice(), activatorId, state);
+                    Log.i(TAG, "I Am being set to false");
+                }
+            }
+        });
 
         imageview.setOnClickListener(new View.OnClickListener() {
             @Override

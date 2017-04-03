@@ -5,16 +5,19 @@ import android.view.View;
 import android.widget.Switch;
 
 import hestia.UIWidgets.HestiaSwitch;
+import hestia.backend.Activator;
 import hestia.backend.Device;
 
 public class DeviceBar {
     //TODO Add ImageView
     private Device d;
-    private HestiaSwitch hestiaSwitch;
+    private Activator a;
+//    private HestiaSwitch hestiaSwitch;
 
-    public DeviceBar(Device d, HestiaSwitch hestiaSwitch) {
+    public DeviceBar(Device d, Activator a) {
         this.d = d;
-        this.hestiaSwitch = hestiaSwitch;
+        this.a = a;
+//        this.hestiaSwitch = hestiaSwitch;
     }
 
     public Device getDevice() {
@@ -25,16 +28,24 @@ public class DeviceBar {
         this.d = d;
     }
 
-    public HestiaSwitch getHestiaSwitch() {
-        return hestiaSwitch;
+//    public HestiaSwitch getHestiaSwitch() {
+//        return hestiaSwitch;
+//    }
+//
+//    public void setHestiaSwitch(HestiaSwitch hestiaSwitch) {
+//        this.hestiaSwitch = hestiaSwitch;
+//    }
+
+//    public void setLayout(View v, int layoutId) {
+//        hestiaSwitch.setActivatorSwitch((Switch)v.findViewById(layoutId));
+//    }
+
+    public Activator getA() {
+        return a;
     }
 
-    public void setHestiaSwitch(HestiaSwitch hestiaSwitch) {
-        this.hestiaSwitch = hestiaSwitch;
-    }
-
-    public void setLayout(View v, int layoutId) {
-        hestiaSwitch.setActivatorSwitch((Switch)v.findViewById(layoutId));
+    public void setA(Activator a) {
+        this.a = a;
     }
 
     @Override

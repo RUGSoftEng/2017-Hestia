@@ -74,8 +74,8 @@ public class DeviceListFragment extends Fragment implements DevicesChangeListene
         ArrayList<Device> devices = cic.getDevices();
         for (Device d : devices) {
             Activator a = d.getActivator(0);
-            HestiaSwitch hestiaSwitch = new HestiaSwitch(d, a, getActivity());
-            DeviceBar bar = new DeviceBar(d, hestiaSwitch);
+//            HestiaSwitch hestiaSwitch = new HestiaSwitch(d, a, getActivity());
+            DeviceBar bar = new DeviceBar(d, a);
             if(!listDataChild.contains(bar)) {
                 if (!typeExists(d)) {
                     listDataChild.add(new ArrayList<DeviceBar>());
@@ -84,7 +84,6 @@ public class DeviceListFragment extends Fragment implements DevicesChangeListene
                     listDataChild.get(getDeviceType(d)).add(bar);
                 }
             }
-
         }
         listAdapter.setListData(listDataChild);
         expListView.setAdapter(listAdapter);
