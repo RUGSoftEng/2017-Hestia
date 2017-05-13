@@ -101,6 +101,8 @@ public class ActivatorAndActivatorStateTest {
         // Testing equals method
         assertTrue(testBoolActivator.equals(testBoolActivator));
         assertFalse(testBoolActivator.equals(testFloatActivator));
+        assertFalse(testBoolActivator.equals(null));
+
     }
 
 
