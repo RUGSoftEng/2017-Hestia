@@ -134,7 +134,6 @@ public class BackendInteractorTest {
         backendInteractor.addDevice(temp);
         assertEquals(2, backendInteractor.getDevices().size());
 
-        GetPluginInformationRequest mDev = mock(GetPluginInformationRequest.class);
     }
 
     @Test

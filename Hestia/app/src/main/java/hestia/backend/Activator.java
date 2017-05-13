@@ -81,8 +81,7 @@ public class Activator {
         Activator activator = (Activator) o;
 
         if (id != activator.id) return false;
-        if (!state.equals(activator.state)) return false;
-        return name.equals(activator.name);
+        return state.equals(activator.state) && name.equals(activator.name);
 
     }
 
@@ -96,6 +95,6 @@ public class Activator {
 
     @Override
     public String toString() {
-        return name + " " + state;
+        return name + " " + state + " id: " + id;
     }
 }
