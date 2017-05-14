@@ -20,4 +20,5 @@
     <string name="emptyValuesEntered">One or more empty values were entered.</string>
     <string name="ipSetTo">Ip address set to :</string>
     <string name="default_ip">80.114.179.5</string>
+    <string name="default_port">8000 </string>
 </resources>
