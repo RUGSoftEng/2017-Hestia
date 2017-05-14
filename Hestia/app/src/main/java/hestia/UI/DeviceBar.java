@@ -45,7 +45,8 @@ public class DeviceBar {
         boolean equal = false;
 
         if (object != null && object instanceof DeviceBar) {
-            if(this.device.getId() == ((DeviceBar) object).getDevice().getId()){
+            DeviceBar bar = (DeviceBar) object;
+            if(this.device.getId().equals (bar.getDevice().getId())){
                 equal = true;
             }
         }
