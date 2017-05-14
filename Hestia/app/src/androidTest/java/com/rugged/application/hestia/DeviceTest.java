@@ -17,6 +17,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertNotEquals;
 
 @RunWith(AndroidJUnit4.class)
 public class DeviceTest {
@@ -58,6 +59,17 @@ public class DeviceTest {
         tDev.setActivators(arr);
         assertFalse(tDev.getSliders() == null);
 
+    }
+
+    @Test
+    public void equalsAndHashTest(){
+        assertTrue(tDev.equals(tDev));
+        assertFalse(tDev.equals(0));
+        assertFalse(tDev.equals(null));
+
+        Device dev2 = new Device(DEFAULT_DEV_ID,"testDevice","HESTIA_DEVICE", new ArrayList<Activator>());
+
+        assertNotEquals(tDev.hashCode(),dev2.hashCode());
     }
 
 }

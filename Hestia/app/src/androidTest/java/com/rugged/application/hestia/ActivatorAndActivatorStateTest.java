@@ -101,7 +101,20 @@ public class ActivatorAndActivatorStateTest {
         // Testing equals method
         assertTrue(testBoolActivator.equals(testBoolActivator));
         assertFalse(testBoolActivator.equals(testFloatActivator));
+        assertFalse(testBoolActivator.equals(null));
+
     }
 
+    @Test
+    public void activatorStateEqualsAndHashTest(){
+        // Testing hashcodes
+        assertNotEquals(boolActivatorState.hashCode(),floatActivatorState.hashCode());
+        assertEquals(boolActivatorState.hashCode(),boolActivatorState.hashCode());
+
+        // Testing equals method
+        assertTrue(boolActivatorState.equals(boolActivatorState));
+        assertFalse(boolActivatorState.equals(floatActivatorState));
+        assertFalse(boolActivatorState.equals(null));
+    }
 
 }
