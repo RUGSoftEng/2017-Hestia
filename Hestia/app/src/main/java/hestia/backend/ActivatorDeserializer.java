@@ -31,13 +31,16 @@ public class ActivatorDeserializer implements JsonDeserializer<Activator> {
 
         JsonObject jsonObject = (JsonObject) json;
         Log.i("JSONOBJECT",jsonObject.toString());
-        String stateType = jsonObject.get("type").getAsString();
-        String rawState = jsonObject.get("state").getAsString();
+
+        JsonObject jsonState = jsonObject.getAsJsonObject("state");
+
+        String stateType = jsonState.get("type").getAsString();
+        String rawState = jsonState.get("rawState").getAsString();
         ActivatorState state = null;
 
         switch (stateType.toLowerCase()) {
             case "bool":
-                state = new ActivatorState<Boolean>(Boolean.parseBoolean(rawState),"TOGGLE");
+                state = new ActivatorState<Boolean>(Boolean.parseBoolean(rawState),"bool");
                 break;
             case "int":
                 state = new ActivatorState<Float>(Float.parseFloat(rawState),"SLIDER");
@@ -51,7 +54,7 @@ public class ActivatorDeserializer implements JsonDeserializer<Activator> {
             default : break;
         }
 
-        int activatorId = jsonObject.get("activatorId").getAsInt();
+        int activatorId = jsonObject.get("id").getAsInt();
         String name = jsonObject.get("name").getAsString();
 
         return new Activator(activatorId, state, name);

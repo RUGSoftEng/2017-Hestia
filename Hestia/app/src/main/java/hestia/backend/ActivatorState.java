@@ -1,5 +1,7 @@
 package hestia.backend;
 
+import static android.R.attr.name;
+
 /**
  * Wrapper class for the different state fields. The activator state has a type T, which is
  * inferred using a custom JSON deserializer.
@@ -57,5 +59,21 @@ public class ActivatorState<T> {
     @Override
     public String toString(){
         return this.type + " - " + this.rawState.toString();
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ActivatorState activatorS = (ActivatorState) o;
+
+        if(!type.equals(activatorS.getType())) return false;
+        return rawState == activatorS.getRawState();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }
