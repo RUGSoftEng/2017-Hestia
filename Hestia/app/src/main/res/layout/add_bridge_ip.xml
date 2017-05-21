@@ -6,13 +6,6 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-<TextView
-    android:text = "@string/addDeviceText"
-    android:layout_width="wrap_content"
-    android:layout_height = "wrap_content"
-    android:id = "@+id/textview"
-    android:textSize="20sp" />
-
 <EditText
     android:layout_width = "wrap_content"
     android:layout_height = "wrap_content"
@@ -26,27 +19,4 @@
     android:inputType="text"
 
     />
-
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/back"
-        android:id="@+id/back_button"
-        android:layout_marginRight="45dp"
-        android:maxLines="1"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/confirm_button"
-        android:text="@string/confirm"
-        android:layout_marginLeft="45dp"
-        android:maxLines="1"
-        />
-</LinearLayout>
 </LinearLayout>

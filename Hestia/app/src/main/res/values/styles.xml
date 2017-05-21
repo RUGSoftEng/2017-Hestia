@@ -12,7 +12,6 @@
         <item name="colorControlActivated">@color/switch_color</item>
         <item name="android:thumbTint">@color/switch_color</item>
         <item name="android:trackTint">@color/switch_color</item>
-
     </style>
 
 </resources>

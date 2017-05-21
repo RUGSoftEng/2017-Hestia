@@ -56,13 +56,13 @@ public class NetworkHandler extends Application{
      * Adds a device to the server, by starting a GetPluginInformationRequest,
      * which will send a GET request to the server and, based on the data returned from
      * the GET request, will do a POST request with additional information.
-     * @param organisation the organization that has/manufactured the device. (e.g. Philips)
+     * @param collection the collection that has/manufactured the device. (e.g. Philips)
      * @param pluginName the name of the plugin the contains data of the device to be added
      * @param activity the current activity
      * @see GetPluginInformationRequest
      */
-    public void addDevice(String organisation, String pluginName, Activity activity) {
-        String path = this.getPath() + "plugins/" + organisation + "/plugins/" + pluginName;
+    public void addDevice(String collection, String pluginName, Activity activity) {
+        String path = this.getPath() + "plugins/" + collection + "/plugins/" + pluginName;
         new GetPluginInformationRequest(path, activity).execute();
     }
 

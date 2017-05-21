@@ -85,6 +85,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                             case R.id.delete:
                                 networkHandler.deleteDevice(device);
                                 break;
+                            case R.id.change_name:
+
+                                break;
                             default:
                                 break;
                         }

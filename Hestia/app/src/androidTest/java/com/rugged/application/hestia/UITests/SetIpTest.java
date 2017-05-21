@@ -35,10 +35,7 @@ public class SetIpTest {
     @Before
     public void checkDialog() {
         onView(ViewMatchers.withId(R.id.context_menu)).perform(click());
-
         onView(withText(SET_IP_TEXT)).perform(click());
-
-        onView(withText(R.string.ipDialogText)).check(matches(isDisplayed()));
     }
 
     @Test

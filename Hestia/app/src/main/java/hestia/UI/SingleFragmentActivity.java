@@ -1,6 +1,8 @@
 
 package hestia.UI;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -132,8 +134,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     }
 
     private void showIpDialog() {
-        IpDialog ipDialog = new IpDialog(SingleFragmentActivity.this);
-        ipDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        ipDialog.show();
+        IpDialog d = new IpDialog(SingleFragmentActivity.this);
+        d.show();
     }
 }
