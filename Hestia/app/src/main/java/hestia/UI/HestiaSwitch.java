@@ -5,11 +5,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import hestia.backend.Activator;
 import hestia.backend.ActivatorState;
-import hestia.backend.BackendInteractor;
+import hestia.backend.NetworkHandler;
 import hestia.backend.Device;
 
 public class HestiaSwitch implements CompoundButton.OnCheckedChangeListener {
@@ -17,7 +16,7 @@ public class HestiaSwitch implements CompoundButton.OnCheckedChangeListener {
     private Device device;
     private Activator activator;
     private Switch activatorSwitch;
-    private BackendInteractor backendInteractor = BackendInteractor.getInstance();
+    private NetworkHandler networkHandler = NetworkHandler.getInstance();
 
     public HestiaSwitch(Device device, Activator activator, Context context) {
         this.device = device;
@@ -35,7 +34,7 @@ public class HestiaSwitch implements CompoundButton.OnCheckedChangeListener {
     public void onCheckedChanged(CompoundButton compoundButton, boolean currentState) {
         ActivatorState state = activator.getState();
         state.setRawState(currentState);
-        backendInteractor.setActivatorState(device, activator, state);
+        networkHandler.setActivatorState(device, activator, state);
         Log.i(TAG, "Sending a post to the server");
     }
 

@@ -14,7 +14,7 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="addDeviceText">Add a new device</string>
-    <string name="organizationHint">Collection</string>
+    <string name="collectionHint">Collection</string>
     <string name="pluginHint">Plugin</string>
     <string name="bridgeHint">Bridge (e.g. 192.168.1.0)</string>
     <string name="emptyValuesEntered">One or more empty values were entered.</string>

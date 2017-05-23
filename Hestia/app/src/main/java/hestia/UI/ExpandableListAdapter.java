@@ -10,14 +10,9 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import hestia.backend.BackendInteractor;
-
+import hestia.backend.NetworkHandler;
 import com.rugged.application.hestia.R;
-
 import java.util.ArrayList;
-
 import hestia.backend.Device;
 
 /**
@@ -29,12 +24,12 @@ import hestia.backend.Device;
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
     private ArrayList<ArrayList<DeviceBar>> listDataChild;
     private Context context;
-    private BackendInteractor backendInteractor;
+    private NetworkHandler networkHandler;
 
     public ExpandableListAdapter(ArrayList<ArrayList<DeviceBar>> listChildData, Context context) {
         this.listDataChild = listChildData;
         this.context = context;
-        this.backendInteractor = BackendInteractor.getInstance();
+        this.networkHandler = NetworkHandler.getInstance();
     }
 
     @Override
@@ -70,7 +65,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             @Override
             public void onClick(View view) {
                 final Device device = ((DeviceBar) getChild(groupPosition, childPosition)).getDevice();
-                if(device.getSliders()!=null) {
+                if(!device.getSliders().isEmpty()) {
                     new SlideDialog(context, device).show();
                 }
             }
@@ -79,20 +74,19 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         imageview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Device device = ((DeviceBar) getChild(groupPosition, childPosition))
-                        .getDevice();
-                PopupMenu popup = createPopupMenu(view,device);
+                final Device device = ((DeviceBar) getChild(groupPosition, childPosition)).getDevice();
+                PopupMenu popup = createPopupMenu(view);
 
                 popup.show();
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
-                            //case R.id.sliders:
-                               // new SlideDialog(context, device).show();
-                                //break;
                             case R.id.delete:
-                                backendInteractor.deleteDevice(device);
+                                networkHandler.deleteDevice(device);
+                                break;
+                            case R.id.change_name:
+                                new ChangeNameDialog(context, device).show();
                                 break;
                             default:
                                 break;
@@ -137,8 +131,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             convertView = layoutInflater.inflate(R.layout.list_group, null);
         }
 
-        TextView lblListHeader = (TextView) convertView
-                .findViewById(R.id.lblListHeader);
+        TextView lblListHeader = (TextView) convertView .findViewById(R.id.lblListHeader);
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
 
@@ -159,15 +152,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         return true;
     }
 
-    private PopupMenu createPopupMenu(View view, Device device){
+    private PopupMenu createPopupMenu(View view){
         PopupMenu popup = new PopupMenu(context, view);
-        popup.getMenuInflater().inflate(R.menu.popup,
-                popup.getMenu());
-
-        if (device.getSliders()==null || device.getSliders() != null) {
-            popup.getMenu().findItem(R.id.sliders).setEnabled(false);
-            popup.getMenu().findItem(R.id.sliders).setVisible(false);
-        }
+        popup.getMenuInflater().inflate(R.menu.popup, popup.getMenu());
         return popup;
     }
 }

@@ -8,6 +8,11 @@
         android:title="Delete"
         />
     <item
+        android:id="@+id/change_name"
+        android:title="Change name">
+
+    </item>
+    <!-- <item
         android:id="@+id/sliders"
-        android:title="Sliders" />
+        android:title="Sliders" /> -->
 </menu>

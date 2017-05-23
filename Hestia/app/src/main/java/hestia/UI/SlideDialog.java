@@ -12,7 +12,7 @@ import com.rugged.application.hestia.R;
 import java.util.ArrayList;
 import hestia.backend.Activator;
 import hestia.backend.ActivatorState;
-import hestia.backend.BackendInteractor;
+import hestia.backend.NetworkHandler;
 import hestia.backend.Device;
 
 /**
@@ -24,12 +24,12 @@ public class SlideDialog extends Dialog implements android.view.View.OnClickList
     private Device device;
     private ArrayList<Activator> fields;
     private Context context;
-    private BackendInteractor backendInteractor;
+    private NetworkHandler networkHandler;
 
     public SlideDialog(Context context, Device device) {
         super(context);
         this.context = context;
-        this.backendInteractor = BackendInteractor.getInstance();
+        this.networkHandler = NetworkHandler.getInstance();
         this.device = device;
         this.fields = device.getSliders();
     }
@@ -79,7 +79,7 @@ public class SlideDialog extends Dialog implements android.view.View.OnClickList
                 float value = (float)seekBar.getProgress()/maxInt;
                 ActivatorState<Float> state = act.getState();
                 state.setRawState(value);
-                backendInteractor.setActivatorState(device,act,state);
+                networkHandler.setActivatorState(device,act,state);
             }
         });
         return bar;

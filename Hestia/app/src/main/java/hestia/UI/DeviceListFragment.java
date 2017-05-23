@@ -13,10 +13,12 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import hestia.backend.Activator;
-import hestia.backend.BackendInteractor;
+import hestia.backend.NetworkHandler;
+import hestia.backend.Cache;
 import hestia.backend.Device;
 import hestia.backend.DevicesChangeListener;
 import hestia.backend.DevicesEvent;
+
 import com.rugged.application.hestia.R;
 import java.util.ArrayList;
 
@@ -31,7 +33,8 @@ public class DeviceListFragment extends Fragment implements DevicesChangeListene
     private ExpandableListAdapter listAdapter;
     private ExpandableListView expListView;
     private ArrayList<ArrayList<DeviceBar>> listDataChild;
-    private BackendInteractor backendInteractor =  BackendInteractor.getInstance();
+    private NetworkHandler networkHandler =  NetworkHandler.getInstance();
+    private Cache cache = Cache.getInstance();
     private FloatingActionButton floatingActionButton;
     private final static String TAG = "DeviceListFragment";
     private Activity surroundingActivity;
@@ -55,7 +58,7 @@ public class DeviceListFragment extends Fragment implements DevicesChangeListene
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
                 Log.i(TAG, "Currently refreshing");
-                backendInteractor.updateDevices();
+                networkHandler.updateDevices();
                 Log.i(TAG, "Refresh stopped");
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -83,7 +86,7 @@ public class DeviceListFragment extends Fragment implements DevicesChangeListene
             }
         });
 
-        backendInteractor.addDevicesChangeListener(this);
+        cache.addDevicesChangeListener(this);
         populateUI();
 
         return deviceListView;
@@ -100,7 +103,7 @@ public class DeviceListFragment extends Fragment implements DevicesChangeListene
 
     private void populateUI() {
         listDataChild = new ArrayList<>();
-        ArrayList<Device> devices = backendInteractor.getDevices();
+        ArrayList<Device> devices = cache.getDevices();
         for (Device device : devices) {
             Activator activator = device.getToggle();
             HestiaSwitch hestiaSwitch = new HestiaSwitch(device, activator, surroundingActivity);

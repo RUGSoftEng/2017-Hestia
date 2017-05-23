@@ -62,6 +62,7 @@ public class Device {
             Integer rank = activator.getRank();
             if(rank == 0) {
                 toggle = activator;
+                break;
             }
         }
         return toggle;
@@ -80,7 +81,7 @@ public class Device {
                 sliders.add(activator);
             }
         }
-        return (sliders.isEmpty() ? null : sliders);
+        return sliders;
     }
 
     /**

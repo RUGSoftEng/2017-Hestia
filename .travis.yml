@@ -53,6 +53,7 @@ after_failure:
 
 after_success:
   - codecov
+  - sh set_tags.sh
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock

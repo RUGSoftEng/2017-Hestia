@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import hestia.backend.Activator;
 import hestia.backend.ActivatorDeserializer;
-import hestia.backend.BackendInteractor;
+import hestia.backend.Cache;
 import hestia.backend.Device;
 
 /**
@@ -36,7 +36,7 @@ public class GetDevicesRequest extends GetRequest<ArrayList<Device>> {
     protected void onPostExecute(HttpURLConnection urlConnection) {
         ArrayList<Device> devices = super.getReturnValue();
         if(devices != null) {
-            BackendInteractor.getInstance().setDevices(devices);
+            Cache.getInstance().setDevices(devices);
         } else {
             Log.e("GetDevicesRequest", "DEVICES ARRAY IS NULL");
         }

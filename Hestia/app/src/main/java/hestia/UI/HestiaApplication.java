@@ -2,19 +2,20 @@ package hestia.UI;
 
 import android.app.Application;
 
-import hestia.backend.BackendInteractor;
+import hestia.backend.NetworkHandler;
 
 /**
  * An extension of the Application class provided by Android, which additionally contains the
- * BackendInteractor singleton.
- * @see BackendInteractor
+ * NetworkHandler singleton.
+ * @see NetworkHandler
  */
 
 public class HestiaApplication extends Application {
-    private static final BackendInteractor backendInteractor = BackendInteractor.getInstance();
+    private static final NetworkHandler NETWORK_HANDLER = NetworkHandler.getInstance();
 
-    public BackendInteractor getBackendInteractor() {
-        return backendInteractor;
+   /* public NetworkHandler getBackendInteractor() {
+        return NETWORK_HANDLER;
     }
+    */
 
 }
