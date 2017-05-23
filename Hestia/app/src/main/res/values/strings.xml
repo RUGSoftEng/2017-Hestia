@@ -18,7 +18,7 @@
     <string name="pluginHint">Plugin</string>
     <string name="bridgeHint">Bridge (e.g. 192.168.1.0)</string>
     <string name="emptyValuesEntered">One or more empty values were entered.</string>
-    <string name="ipSetTo">Ip address set to :</string>
     <string name="default_ip">80.114.179.5</string>
     <string name="default_port">8000</string>
+    <string name="invalidIp">IP must be in range 0.0.0.0 – 255.255.255.255</string>
 </resources>
