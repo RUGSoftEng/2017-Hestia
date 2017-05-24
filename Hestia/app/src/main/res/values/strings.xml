@@ -21,4 +21,9 @@
     <string name="ipSetTo">Ip address set to :</string>
     <string name="default_ip">80.114.179.5</string>
     <string name="default_port">8000</string>
+    <string name="changeUserPassText">Change username/password</string>
+    <string name="oldPassHint">Old password</string>
+    <string name="newPassHint">New password</string>
+    <string name="newPassCheckHint">New password again</string>
+    <string name="newUserHint">New username</string>
 </resources>

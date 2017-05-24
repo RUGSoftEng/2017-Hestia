@@ -37,11 +37,13 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     private List<MenuObject> menuObjects;
     private Cache cache;
     private final String changeIpText = "Set IP ";
-    private final String logoutText = "Logout ";
+    public static final String logoutText = "Logout ";
+    public static final String changeLoginText = "Change user/pass";
     private final String extraName = "login";
     private final String logoutExtraValue = "logout";
     private final int IP = 1;
     private final int LOGOUT = 2;
+    private final int CHANGELOGIN = 3;
 
     protected abstract Fragment createFragment();
 
@@ -94,6 +96,10 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
         logout.setResource(R.mipmap.ic_exit_to_app);
         objects.add(logout);
 
+        MenuObject changeLogin = new MenuObject(changeLoginText);
+        changeLogin.setResource(R.mipmap.ic_key);
+        objects.add(changeLogin);
+
         return objects;
     }
 
@@ -123,6 +129,8 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
             showIpDialog();
         } else if(position == LOGOUT) {
             gotoLoginActivity();
+        } else if(position == CHANGELOGIN){
+            showChangeLoginDialog();
         }
     }
 
@@ -136,5 +144,11 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     private void showIpDialog() {
         IpDialog d = new IpDialog(SingleFragmentActivity.this);
         d.show();
+    }
+
+    private void showChangeLoginDialog() {
+        ChangeLoginDialog changeLoginDialog = new ChangeLoginDialog(SingleFragmentActivity.this);
+        changeLoginDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        changeLoginDialog.show();
     }
 }
