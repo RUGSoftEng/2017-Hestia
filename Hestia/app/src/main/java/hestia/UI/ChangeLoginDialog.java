@@ -19,7 +19,7 @@ public class ChangeLoginDialog extends HestiaDialog {
     private SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
     private final String pass_old_wrong = "Old password is incorrect ";
-    private final String pass_check_wrong = "Passwords did not match ";
+    private final String pass_check_wrong = "New password not set ";
     private final String pass_set = "Password set to : ";
     private final String user_set = "Username set to : ";
     private final String user_not_set = "Username not changed (length<5)";

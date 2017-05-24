@@ -37,8 +37,8 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
     private List<MenuObject> menuObjects;
     private Cache cache;
     private final String changeIpText = "Set IP ";
-    private final String logoutText = "Logout ";
-    private final String changeLoginText = "Change user/pass";
+    public static final String logoutText = "Logout ";
+    public static final String changeLoginText = "Change user/pass";
     private final String extraName = "login";
     private final String logoutExtraValue = "logout";
     private final int IP = 1;
