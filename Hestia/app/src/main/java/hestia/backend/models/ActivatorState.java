@@ -1,4 +1,8 @@
-package hestia.backend;
+package hestia.backend.models;
+
+import com.google.gson.JsonPrimitive;
+
+import hestia.backend.models.deserializers.ActivatorDeserializer;
 
 /**
  * Wrapper class for the different state fields. The activator state has a type T, which is
@@ -53,6 +57,19 @@ public class ActivatorState<T> {
     public void setType(String type){
         this.type = type;
     }
+
+
+    public JsonPrimitive getRawStateJSON() {
+        switch (this.getType().toLowerCase()) {
+            case "bool":
+                return new JsonPrimitive(Boolean.valueOf(String.valueOf(this.getRawState())));
+            case "float":
+                return new JsonPrimitive(Float.valueOf(String.valueOf(this.getRawState())));
+            default:
+                return new JsonPrimitive(String.valueOf(this.getRawState()));
+        }
+    }
+
 
     @Override
     public String toString(){

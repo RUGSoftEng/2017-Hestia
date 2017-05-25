@@ -12,17 +12,15 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name="hestia.UI.LoginActivity"
+        <activity android:name="hestia.UI.activities.login.LoginActivity"
             android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="hestia.UI.DeviceListActivity"
-            android:screenOrientation="locked">
-
-        </activity>
+        <activity android:name="hestia.UI.activities.home.HomeActivity"
+            android:screenOrientation="locked"/>
     </application>
 
 </manifest>

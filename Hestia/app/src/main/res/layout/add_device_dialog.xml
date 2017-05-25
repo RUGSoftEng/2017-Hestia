@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:id="@+id/add_device_dialog"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/add_device_dialog"
     android:orientation="vertical"
     android:padding="8dp">
 
-<EditText
-    android:layout_width = "wrap_content"
-    android:layout_height = "wrap_content"
-    android:id = "@+id/collection"
-    android:hint = "@string/collectionHint"
-    android:focusable = "true"
-    android:textColorHint = "@color/hint"
-    android:textSize="20sp"
-    android:maxLines="1"
-    android:inputType="text"
-    />
+    <AutoCompleteTextView
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:id = "@+id/collection"
+        android:hint = "@string/collectionHint"
+        android:focusable = "true"
+        android:textColorHint = "@color/hint"
+        android:textSize="20sp"
+        android:maxLines="1"
+        android:inputType="text"
+        />
 
-<EditText
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/pluginName"
-    android:textSize="20sp"
-    android:textColorHint="@color/hint"
-    android:hint="@string/pluginHint"
-    android:maxLines="1"
-    android:inputType="text"
-    />
+    <AutoCompleteTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/pluginName"
+        android:textSize="20sp"
+        android:textColorHint="@color/hint"
+        android:hint="@string/pluginHint"
+        android:maxLines="1"
+        android:inputType="text"
+        />
 
 </LinearLayout>

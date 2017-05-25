@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <!--<item-->
-        <!--android:id="@+id/settings"-->
-        <!--android:title="settings" />-->
+
     <item
         android:id="@+id/delete"
         android:title="Delete"
         />
+
     <item
         android:id="@+id/change_name"
-        android:title="Change name">
-
-    </item>
-    <!-- <item
-        android:id="@+id/sliders"
-        android:title="Sliders" /> -->
+        android:title="Change name"/>
 </menu>

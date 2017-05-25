@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import hestia.UI.LoginActivity;
+import hestia.UI.activities.login.LoginActivity;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -63,7 +63,7 @@ public class LoginTest {
         onView(withId(R.id.loginButton)).perform(click());
 
         intended(allOf(
-                hasComponent(hasShortClassName("hestia.UI.DeviceListActivity")),
+                hasComponent(hasShortClassName("hestia.UI.Activities.DeviceListActivity")),
                 toPackage(PACKAGE_NAME)));
 
     }

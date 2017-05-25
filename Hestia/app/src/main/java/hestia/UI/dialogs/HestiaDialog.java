@@ -1,30 +1,18 @@
-package hestia.UI;
+package hestia.UI.dialogs;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.gson.JsonObject;
 import com.rugged.application.hestia.R;
-
-import hestia.backend.NetworkHandler;
-
 
 abstract class HestiaDialog extends Dialog implements android.view.View.OnClickListener{
     protected Context context;
     private int layoutReference;
-
     private String title;
     private Button cancel;
     private Button confirm;
@@ -47,8 +35,8 @@ abstract class HestiaDialog extends Dialog implements android.view.View.OnClickL
         confirm.setOnClickListener(this);
         LayoutInflater inflater = getLayoutInflater();
         FrameLayout frame = (FrameLayout)findViewById(R.id.dialog_container);
-        View v = inflater.inflate(layoutReference, null);
-        frame.addView(v);
+        View view = inflater.inflate(layoutReference, null);
+        frame.addView(view);
     }
 
     abstract void pressCancel();
@@ -67,5 +55,4 @@ abstract class HestiaDialog extends Dialog implements android.view.View.OnClickL
                 break;
         }
     }
-
 }

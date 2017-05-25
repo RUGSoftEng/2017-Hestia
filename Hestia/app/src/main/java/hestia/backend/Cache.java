@@ -1,100 +1,126 @@
 package hestia.backend;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.HashMap;
+import hestia.backend.models.Device;
+import hestia.backend.models.deserializers.DeviceDeserializer;
+import hestia.backend.models.RequiredInfo;
+import hestia.backend.models.deserializers.RequiredInfoDeserializer;
 
 /**
  * A singleton class acts as a temporary memory, storing the data regarding the list of devices,
  * IP address, or port number. During execution, there is a single Cache accessible.
  */
 public class Cache {
-    /**
-     * We use a CopyOnWriteArrayList to avoid ConcurrentModificationExceptions if
-     * a listener attempts to remove itself during event notification.
-     */
-    private final CopyOnWriteArrayList<DevicesChangeListener> listeners = new CopyOnWriteArrayList<>();
-    private static Cache instance;
-    private ArrayList<Device> devices = new ArrayList<>();
-    private String ip = "82.73.173.179";
-    private int port = 8000;
+    private NetworkHandler handler;
 
-    /**
-     * The empty constructor, which can not be accessed from the outside,
-     * because we want a singleton behavior.
-     */
-    private Cache() {}
-
-    /**
-     * Returns the single instance of Cache.
-     * If there was no instance of this class created previously,
-     * then it will create one and return it
-     * @return the single instance of Cache
-     */
-    public static Cache getInstance(){
-        if(instance == null){
-            instance = new Cache();
-        }
-        return instance;
+    public Cache(NetworkHandler handler){
+        this.handler = handler;
     }
 
-    public ArrayList<Device> getDevices(){
-        return devices;
-    }
+    public ArrayList<Device> getDevices() throws IOException, ComFaultException {
+        String endpoint = "devices/";
+        JsonElement payload = handler.GET(endpoint);
+        if(payload.isJsonArray()) {
+            JsonArray jsonArray = payload.getAsJsonArray();
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(Device.class, new DeviceDeserializer());
+            Gson gson = gsonBuilder.create();
 
-    /**
-     * Replaces the current list of devices with the specified one and will fire a change event.
-     * @param devices the new list of devices
-     */
-    public void setDevices(ArrayList<Device> devices) {
-        this.devices = devices;
-        fireChangeEvent();
-    }
-
-    public String getIp(){
-        return this.ip;
-    }
-
-    public void setIp(String ip){
-        this.ip = ip;
-    }
-
-    public int getPort(){
-        return port;
-    }
-
-    public void setPort(int port){
-        this.port = port;
-    }
-
-    /**
-     * Triggers a change event. The change is propagated to all listeners.
-     * @see hestia.UI.DeviceListFragment
-     */
-    private void fireChangeEvent() {
-        DevicesEvent evt = new DevicesEvent(this);
-        for (DevicesChangeListener listener : listeners) {
-            listener.changeEventReceived(evt);
+            Type type = new TypeToken<ArrayList<Device>>(){}.getType();
+            ArrayList<Device> devices = gson.fromJson(jsonArray, type);
+            this.connectDevicesToHandler(devices);
+            return devices;
+        } else {
+            JsonObject jsonObject = payload.getAsJsonObject();
+            String error = jsonObject.get("error").getAsString();
+            String message = jsonObject.get("message").getAsString();
+            throw new ComFaultException(error, message);
         }
     }
 
-    /**
-     * Adds a DeviceChangeListener to the list of listeners.
-     * @param listener the listener to be added to the list of listeners.
-     */
-    public void addDevicesChangeListener(DevicesChangeListener listener) {
-        this.listeners.add(listener);
+    public void addDevice(RequiredInfo info) throws IOException {
+        JsonObject send = new JsonObject();
+        send.addProperty("collection", info.getCollection());
+        send.addProperty("plugin_name", info.getPlugin());
+        JsonObject required = new JsonObject();
+        for(String key : info.getInfo().keySet()){
+            required.addProperty(key, info.getInfo().get(key));
+        }
+        send.add("required_info", required);
+        handler.POST(send, "devices/");
     }
 
-    /**
-     * Removes a DeviceChangeListener from the the list of listeners.
-     * @param listener the listener to be removed from the list of listeners.
-     */
-    public void removeDevicesChangeListener(DevicesChangeListener listener) {
-        this.listeners.remove(listener);
+    public void removeDevice(Device device) throws IOException, ComFaultException {
+        String endpoint = "devices/" + device.getId();
+        JsonElement payload = handler.DELETE(endpoint);
+        if(payload != null && payload.isJsonObject()) {
+            JsonObject jsonObject = payload.getAsJsonObject();
+            if(jsonObject.has("error")) {
+                String error = jsonObject.get("error").getAsString();
+                String message = jsonObject.get("message").getAsString();
+                throw new ComFaultException(error, message);
+            }
+        }
     }
 
-    public CopyOnWriteArrayList<DevicesChangeListener> getListeners(){
-        return this.listeners;
+    public ArrayList<String> getCollections() throws IOException, ComFaultException {
+        JsonElement object = handler.GET("plugins");
+        return ParseInfo(object);
     }
 
+    public ArrayList<String> getPlugins(String collection) throws IOException, ComFaultException {
+        JsonElement object = handler.GET("plugins/" + collection);
+        return ParseInfo(object);
+    }
+
+    public RequiredInfo getRequiredInfo(String collection, String plugin) throws IOException {
+        JsonElement object = handler.GET("plugins/" + collection + "/plugins/" + plugin);
+        if (object.isJsonObject()){
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(RequiredInfo.class, new RequiredInfoDeserializer());
+            Gson gson = gsonBuilder.create();
+
+            RequiredInfo requiredInfo = gson.fromJson(object, RequiredInfo.class);
+            return requiredInfo;
+        }
+        return null;
+    }
+
+    private ArrayList<String> ParseInfo(JsonElement element) throws ComFaultException {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        if(element.isJsonArray()) {
+            JsonArray array = element.getAsJsonArray();
+            ArrayList<String> list = gson.fromJson(array, new TypeToken<ArrayList<String>>() {
+            }.getType());
+            return list;
+        } else if (element.getAsJsonObject().has("error")){
+            ComFaultException comFaultException=gson.fromJson(element,ComFaultException.class);
+            throw comFaultException;
+        }
+        return new ArrayList<>();
+    }
+
+    public NetworkHandler getHandler() {
+        return handler;
+    }
+
+    public void setHandler(NetworkHandler handler) {
+        this.handler = handler;
+    }
+
+    private void connectDevicesToHandler(ArrayList<Device> devices) {
+        for(Device device : devices) {
+            device.setHandler(this.handler);
+        }
+    }
 }

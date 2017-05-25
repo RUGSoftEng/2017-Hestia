@@ -9,13 +9,14 @@ import com.google.gson.JsonPrimitive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import java.util.ArrayList;
-import hestia.backend.Activator;
-import hestia.backend.ActivatorState;
+
+import hestia.backend.models.ActivatorState;
 import hestia.backend.Cache;
-import hestia.backend.Device;
 import hestia.backend.NetworkHandler;
 import static org.junit.Assert.assertEquals;
+
+
+/**
 
 @RunWith(AndroidJUnit4.class)
 public class NetworkHandlerTest {
@@ -72,3 +73,5 @@ public class NetworkHandlerTest {
     }
 
 }
+
+ */

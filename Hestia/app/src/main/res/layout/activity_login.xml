@@ -9,7 +9,7 @@
     android:paddingTop = "@dimen/activity_vertical_margin"
     android:paddingBottom = "@dimen/activity_vertical_margin"
     android:background="@color/white"
-    tools:context = "hestia.UI.LoginActivity">
+    tools:context = "hestia.UI.activities.login.LoginActivity">
 
     <ImageView
         android:id="@+id/imageView"

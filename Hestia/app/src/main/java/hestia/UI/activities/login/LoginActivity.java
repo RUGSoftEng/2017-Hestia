@@ -1,4 +1,4 @@
-package hestia.UI;
+package hestia.UI.activities.login;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,10 +10,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.rugged.application.hestia.R;
-
 import java.util.Locale;
+import hestia.UI.activities.home.HomeActivity;
 
 /**
  *  This class handles the login activity.
@@ -91,7 +90,7 @@ public class LoginActivity extends Activity  {
     }
 
     private void gotoMainActivity(){
-        Intent toIntent = new Intent(LoginActivity.this, DeviceListActivity.class);
+        Intent toIntent = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(toIntent);
         finish();
     }

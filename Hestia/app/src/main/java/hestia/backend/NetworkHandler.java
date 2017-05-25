@@ -1,134 +1,149 @@
 package hestia.backend;
 
-import android.app.Activity;
 import android.app.Application;
+import android.util.Log;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import hestia.backend.requests.DeleteRequest;
-import hestia.backend.requests.GetDevicesRequest;
-import hestia.backend.requests.GetPluginInformationRequest;
-import hestia.backend.requests.PostRequest;
+import com.google.gson.reflect.TypeToken;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
- * A singleton class which handles interaction between front and back-end. The facade pattern is
- * used to achieve this. During execution, there is a single NetworkHandler accessible
- * throughout the entire app through the HestiaApplication class.
- * @see hestia.UI.HestiaApplication
+ * A singleton class which handles interaction between front and back-end. It contains methods
+ * for sending 4 types of requests (GET, PUT, POST AND DELETE), along with additional methods
+ * for setting up the connection to the server, sending and receiving data from the server,
+ * as well as getters and setters for the ip and the port number.
  */
 
-public class NetworkHandler extends Application{
-    private static NetworkHandler instance;
-    private Cache cache = Cache.getInstance();
+public class NetworkHandler extends Application {
+    private final String TAG = "NetworkHandler";
+    private String ip;
+    private Integer port;
+
+    public NetworkHandler(String ip, int port){
+        this.ip = ip;
+        this.port = port;
+    }
+
+    public JsonElement GET(String endpoint) throws IOException {
+        HttpURLConnection connector = this.connectToServer("GET", endpoint);
+        JsonElement payload = this.getPayloadFromServer(connector);
+        return payload;
+    }
+
+    public JsonElement POST(JsonObject object, String endpoint) throws IOException {
+        HttpURLConnection connector = this.connectToServer("POST", endpoint);
+        this.sendToServer(connector, object);
+        JsonElement payload = this.getPayloadFromServer(connector);
+        return payload;
+    }
+
+    public JsonElement DELETE(String endpoint) throws IOException {
+        HttpURLConnection connector = this.connectToServer("DELETE", endpoint);
+        JsonElement payload = this.getPayloadFromServer(connector);
+        return payload;
+    }
+
+    public JsonElement PUT(JsonObject object, String endpoint) throws IOException {
+        HttpURLConnection connector = this.connectToServer("PUT", endpoint);
+        this.sendToServer(connector, object);
+        JsonElement payload = this.getPayloadFromServer(connector);
+        return payload;
+    }
 
     /**
-     * The empty constructor, which can not be accessed from the outside,
-     * because we want a singleton behavior.
+     * This method establishes the connection to the server, by setting the type of request
+     * and the path.
+     * @param requestMethod the type of request that will be sent to the server.
+     * @param endpoint path to the server's endpoint.
+     * @return the object responsible for setting up the connection to the server.
+     * @throws IOException
      */
-    private NetworkHandler(){}
+    private HttpURLConnection connectToServer(String requestMethod, String endpoint) throws IOException {
+        String path = this.getDefaultPath() + endpoint;
+        URL url = new URL(path);
+        HttpURLConnection connector = (HttpURLConnection) url.openConnection();
+        connector.setReadTimeout(2000);
+        connector.setConnectTimeout(2000);
+        connector.setRequestMethod(requestMethod);
+        connector.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        return connector;
+    }
 
     /**
-     * Returns the single instance of NetworkHandler.
-     * If there was no instance of this class created previously,
-     * then it will create one and return it
-     * @return the single instance of NetworkHandler
+     * This method sends the JsonObject object to the server.
+     * @param connector the object responsible for setting up the connection to the server.
+     * @param object the JsonObject that will be sent to the server.
+     * @throws IOException IOException
      */
-    public static NetworkHandler getInstance(){
-        if(instance == null){
-            instance = new NetworkHandler();
+    private void sendToServer(HttpURLConnection connector, JsonObject object) throws IOException {
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connector.getOutputStream());
+        outputStreamWriter.write(object.toString());
+        Log.d(TAG, object.toString());
+        outputStreamWriter.flush();
+        outputStreamWriter.close();
+    }
+
+    /**
+     * Returns the payload from the server as a JsonElement. If the response code is successful,
+     * it will get the input stream from the connector. Otherwise, it will get the error stream.
+     * @param connector the object responsible for setting up the connection to the server.
+     * @return the payload received from the server.
+     * @throws IOException IOException
+     */
+    private JsonElement getPayloadFromServer(HttpURLConnection connector) throws IOException {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+
+        Integer responseCode = connector.getResponseCode();
+        Log.d(TAG, "Response code: " + responseCode);
+        BufferedReader reader;
+        if (this.isSuccessfulRequest(responseCode)) {
+            reader = new BufferedReader(new InputStreamReader(connector.getInputStream()));
+        } else {
+            reader = new BufferedReader(new InputStreamReader(connector.getErrorStream()));
         }
-        return instance;
+
+        Type returnType = new TypeToken<JsonElement>(){}.getType();
+        JsonElement payload = gson.fromJson(gson.newJsonReader(reader), returnType);
+        reader.close();
+
+        return payload;
     }
 
     /**
-     * Deletes a device from the server by starting a DeleteRequest,
-     * which will send a DELETE request to the server.
-     * @param device the device to be deleted.
-     * @see DeleteRequest
+     * Checks if the HTTP request was successful or not.
+     * @param responseCode the response code of the request.
+     * @return true if it succeeded, false otherwise.
      */
-    public void deleteDevice(Device device) {
-        String id = device.getId();
-        String path = this.getPath() + "devices/" + id;
-        new DeleteRequest(path).execute();
-        this.updateDevices();
+    private boolean isSuccessfulRequest(Integer responseCode) {
+        return (responseCode != null && (200 <= responseCode && responseCode <= 299));
     }
 
-    /**
-     * Adds a device to the server, by starting a GetPluginInformationRequest,
-     * which will send a GET request to the server and, based on the data returned from
-     * the GET request, will do a POST request with additional information.
-     * @param collection the collection that has/manufactured the device. (e.g. Philips)
-     * @param pluginName the name of the plugin the contains data of the device to be added
-     * @param activity the current activity
-     * @see GetPluginInformationRequest
-     */
-    public void addDevice(String collection, String pluginName, Activity activity) {
-        String path = this.getPath() + "plugins/" + collection + "/plugins/" + pluginName;
-        new GetPluginInformationRequest(path, activity).execute();
+    public String getIp() {
+        return ip;
     }
 
-    /**
-     * Executes a POST request, sending a jsonObject containing all information
-     * needed to add a device to the server.
-     * @param requiredInfo the jsonObject containing the information relevant to adding a new device.
-     */
-    public void postDevice(JsonObject requiredInfo) {
-        String path = NetworkHandler.getInstance().getPath() + "devices/";
-        new PostRequest(path, requiredInfo).execute();
-        NetworkHandler.getInstance().updateDevices();
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
-    /**
-     * Updates the current list of devices by running the GetDevicesRequest, which
-     * will execute a GET request for the list of devices from the server.
-     */
-    public void updateDevices(){
-        String devicesPath = this.getPath() + "devices/";
-        new GetDevicesRequest(devicesPath).execute();
+    public Integer getPort() {
+        return port;
     }
 
-    /**
-     * This method implements the HTTP POST method for changing the state of an activator on a
-     * device as an AsyncTask.
-     * @param device The target device for the post
-     * @param activator The target activator for the post
-     * @param newActivatorState The new state object to be used by the post
-     * @see PostRequest
-     */
-    public void setActivatorState(Device device, Activator activator, ActivatorState newActivatorState){
-        activator.setState(newActivatorState);
-        String deviceId = device.getId();
-        String activatorId = activator.getId();
-        String path = this.getPath() + "devices/" + deviceId + "/activators/" + activatorId;
-        JsonObject newState = new JsonObject();
-        JsonPrimitive newStateValue = this.getNewStateValue(newActivatorState);
-        newState.add("state", newStateValue);
-        new PostRequest(path, newState).execute();
+    public void setPort(int port) {
+        this.port = port;
     }
 
-    /**
-     * Creates a JsonPrimitive containing the raw value of the new state.
-     * The raw state can be either a Boolean or a Number. In case the state is something else,
-     * it will return a String.
-     * @param newActivatorState the new state of the device
-     * @return JsonPrimitive containing the rawValue
-     */
-    public JsonPrimitive getNewStateValue(ActivatorState newActivatorState) {
-        switch (newActivatorState.getType().toLowerCase()) {
-            case "bool":
-                return new JsonPrimitive(Boolean.valueOf(String.valueOf(newActivatorState.getRawState())));
-            case "float":
-                return new JsonPrimitive(Float.valueOf(String.valueOf(newActivatorState.getRawState())));
-            default:
-                return new JsonPrimitive(String.valueOf(newActivatorState.getRawState()));
-        }
-    }
-
-    /**
-     * Returns the path to the main page of the server.
-     * This consists of the server's IP address and port number.
-     * @return the path to the main page of the server
-     */
-    public String getPath(){
-        return "http://" + cache.getIp() + ":" + cache.getPort() + "/";
+    public String getDefaultPath() {
+        return "http://" + ip + ":" + port + "/";
     }
 }

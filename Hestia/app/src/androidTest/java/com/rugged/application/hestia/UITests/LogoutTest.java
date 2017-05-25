@@ -5,7 +5,7 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import hestia.UI.DeviceListActivity;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -16,6 +16,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.rugged.application.hestia.R.id.context_menu;
 import static org.hamcrest.Matchers.allOf;
+
+/**
 
 @RunWith(AndroidJUnit4.class)
 public class LogoutTest {
@@ -35,8 +37,10 @@ public class LogoutTest {
         onView(withText(LOGOUT_TEXT)).perform(click());
 
         intended(allOf(
-                hasComponent(hasShortClassName("hestia.UI.LoginActivity")),
+                hasComponent(hasShortClassName("hestia.UI.Activities.Login.LoginActivity")),
                 toPackage(PACKAGE_NAME)));
     }
 
 }
+
+ */

@@ -1,13 +1,9 @@
-package hestia.UI;
+package hestia.UI.dialogs;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,9 +11,13 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.rugged.application.hestia.R;
+
+import java.io.IOException;
 import java.util.HashMap;
 
-import hestia.backend.NetworkHandler;
+import hestia.UI.activities.home.HomeActivity;
+import hestia.backend.Cache;
+import hestia.backend.models.RequiredInfo;
 
 /**
  * This class dynamically creates the fields for the required information.
@@ -27,16 +27,19 @@ import hestia.backend.NetworkHandler;
  */
 
 public class AddDeviceInfo extends HestiaDialog {
-    private HashMap<String, String> fields;
+    private RequiredInfo info;
+    private Cache cache;
     private final String TAG = "AddDeviceInfo";
     private final String fixedFieldCol = "collection";
     private final String fixedFieldPlugin = "plugin";
     private final String propReqInfo = "required_info";
     private static final String EMPTY_STRING="";
 
-    public AddDeviceInfo(Context context, HashMap<String, String> fields) {
+
+    public AddDeviceInfo(Context context, RequiredInfo info, Cache cache) {
         super(context, R.layout.enter_device_info, "Add a device");
-        this.fields = fields;
+        this.info = info;
+        this.cache = cache;
     }
 
     @Override
@@ -48,6 +51,10 @@ public class AddDeviceInfo extends HestiaDialog {
 
         final LinearLayout mainLayout = (LinearLayout) findViewById(R.id.linearMain);
         int count = 0;
+
+        this.setTitle("Adding " + info.getPlugin() + " from " + info.getCollection());
+
+        HashMap<String, String> fields = info.getInfo();
 
         for (String key : fields.keySet()) {
             LinearLayout subLayout = new LinearLayout(context);
@@ -70,7 +77,7 @@ public class AddDeviceInfo extends HestiaDialog {
 
     private EditText createEditText(String key, LinearLayout.LayoutParams params, int count) {
         final EditText field = new EditText(context);
-        field.setText(fields.get(key));
+        field.setText(info.getInfo().get(key));
         field.setId(count);
         if (key.equals(fixedFieldCol)||key.equals(fixedFieldPlugin)) {
             field.setFocusable(false);
@@ -88,38 +95,40 @@ public class AddDeviceInfo extends HestiaDialog {
 
     @Override
     void pressConfirm() {
-        JsonObject requiredInfo = this.getRequiredInfo();
-        if(requiredInfo==null) {
-            Toast.makeText(getContext(), R.string.emptyValuesEntered,
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-        NetworkHandler.getInstance().postDevice(requiredInfo);
+        new AsyncTask<Object, Object, Integer>() {
+            @Override
+            protected Integer doInBackground(Object... params) {
+                updateRequiredInfo();
+                try {
+                    cache.addDevice(info);
+                } catch (IOException e) {
+                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+
+            @Override
+            protected void onPostExecute(Integer returnValue) {
+                // TODO: find a way to update the GUI from here
+            }
+        }.execute();
+
     }
 
+
     /**
-     * Creates a JSON object containing the relevant information in
-     * the "required_information" key. If any field is left empty, it will return a null.
-     * @return addDeviceJSON json object containing the information needed for adding a new device.
+     * Updates the required info with the entered information
      */
-    private JsonObject getRequiredInfo() {
+    private void updateRequiredInfo() {
         int count = 0;
-        JsonObject requiredInfo = new JsonObject();
-        for(String key : this.fields.keySet()) {
+        for(String key : this.info.getInfo().keySet()) {
             EditText field = (EditText) findViewById(count);
             String valueField = field.getText().toString();
 
-            if(EMPTY_STRING.equals(valueField)) {
-                return null;
-            }
-            this.fields.put(key, valueField);
-            String value = this.fields.get(key);
-            requiredInfo.addProperty(key, value);
+            this.info.getInfo().put(key, valueField);
             count++;
         }
-        JsonObject addDeviceJSON = new JsonObject();
-        addDeviceJSON.add(propReqInfo, requiredInfo);
-        return addDeviceJSON;
     }
 
 }
