@@ -25,7 +25,7 @@ public class ChangeLoginDialog extends HestiaDialog {
     private final String user_not_set = "Username not changed (length<5)";
 
     public ChangeLoginDialog(Context context) {
-        super(context, R.layout.change_login_dialog, "Add a device");
+        super(context, R.layout.change_login_dialog, "Change username/password");
     }
 
     @Override

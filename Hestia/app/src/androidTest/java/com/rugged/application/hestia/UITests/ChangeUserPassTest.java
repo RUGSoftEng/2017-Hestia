@@ -43,16 +43,8 @@ public class ChangeUserPassTest {
             new IntentsTestRule<>(DeviceListActivity.class);
 
     @Test
-    public void changeUserTest(){
+    public void changeUserPassTest(){
         // Change user
-        setCredentials(NEW_USER,OLD_PASS,OLD_PASS,OLD_PASS);
-
-        logoutLogin(NEW_USER,OLD_PASS);
-    }
-
-    @Test
-    public void changePassTest(){
-        // Change pass
         setCredentials(NEW_USER,OLD_PASS,NEW_PASS,NEW_PASS);
 
         logoutLogin(NEW_USER,NEW_PASS);
