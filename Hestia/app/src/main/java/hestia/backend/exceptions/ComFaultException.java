@@ -16,5 +16,4 @@ public class ComFaultException extends Exception {
     public String getMessage(){
         return message;
     }
-
 }
