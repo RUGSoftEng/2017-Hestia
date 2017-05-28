@@ -8,7 +8,8 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import com.rugged.application.hestia.R;
 import java.io.IOException;
-import hestia.backend.exceptions.ComFaultException;
+
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 import hestia.backend.models.Device;
 
 public class ChangeNameDialog extends HestiaDialog {
@@ -39,7 +40,7 @@ public class ChangeNameDialog extends HestiaDialog {
                     isSuccessful = true;
                 } catch (IOException e) {
                     e.printStackTrace();
-                } catch (ComFaultException e) {
+                } catch (DeviceNotFoundException e) {
                     Log.d("comFault",e.getError()+":" +e.getMessage());
                     e.printStackTrace();
                 }

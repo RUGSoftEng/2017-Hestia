@@ -14,7 +14,7 @@ import com.rugged.application.hestia.R;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import hestia.backend.exceptions.ComFaultException;
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 import hestia.backend.models.Activator;
 import hestia.backend.models.ActivatorState;
 import hestia.backend.models.Device;
@@ -88,7 +88,7 @@ public class SlideDialog extends Dialog implements android.view.View.OnClickList
                             isSuccessful = true;
                         } catch (IOException e) {
                             e.printStackTrace();
-                        } catch (ComFaultException e) {
+                        } catch (DeviceNotFoundException e) {
                             e.printStackTrace();
                         }
                         return isSuccessful;

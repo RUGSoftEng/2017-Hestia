@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import hestia.backend.ServerCollectionsInteractor;
-import hestia.backend.exceptions.ComFaultException;
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 import hestia.backend.models.RequiredInfo;
 
 /**
@@ -71,7 +71,7 @@ public class AddDeviceDialog extends HestiaDialog {
                     info = serverCollectionsInteractor.getRequiredInfo(collection, pluginName);
                 } catch (IOException e) {
                     e.printStackTrace();
-                } catch (ComFaultException e) {
+                } catch (DeviceNotFoundException e) {
                     e.printStackTrace();
                     String error = e.getError();
                     String message = e.getMessage();
@@ -99,7 +99,7 @@ public class AddDeviceDialog extends HestiaDialog {
                     collections = serverCollectionsInteractor.getCollections();
                 } catch (IOException e) {
                     e.printStackTrace();
-                } catch (ComFaultException e) {
+                } catch (DeviceNotFoundException e) {
                     Toast.makeText(context, e.getError() + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
@@ -125,7 +125,7 @@ public class AddDeviceDialog extends HestiaDialog {
                     plugins = serverCollectionsInteractor.getPlugins(collection);
                 } catch (IOException e) {
                     e.printStackTrace();
-                } catch (ComFaultException e) {
+                } catch (DeviceNotFoundException e) {
                     Toast.makeText(context, e.getError() + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }

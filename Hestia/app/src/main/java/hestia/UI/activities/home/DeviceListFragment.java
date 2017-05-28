@@ -17,7 +17,7 @@ import android.widget.ExpandableListView;
 import hestia.UI.elements.DeviceBar;
 import hestia.UI.dialogs.AddDeviceDialog;
 import hestia.backend.ServerCollectionsInteractor;
-import hestia.backend.exceptions.ComFaultException;
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 import hestia.backend.models.Device;
 
 import com.rugged.application.hestia.R;
@@ -83,7 +83,7 @@ public class DeviceListFragment extends Fragment{
                     devices = serverCollectionsInteractor.getDevices();
                 } catch (IOException e) {
                     e.printStackTrace();
-                } catch (ComFaultException e) {
+                } catch (DeviceNotFoundException e) {
                     e.printStackTrace();
                 }
                 return devices;

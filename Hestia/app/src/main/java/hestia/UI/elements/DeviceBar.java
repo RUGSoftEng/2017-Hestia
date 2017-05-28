@@ -16,7 +16,7 @@ import java.io.IOException;
 import hestia.UI.dialogs.ChangeNameDialog;
 import hestia.UI.dialogs.SlideDialog;
 import hestia.backend.ServerCollectionsInteractor;
-import hestia.backend.exceptions.ComFaultException;
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 import hestia.backend.models.Activator;
 import hestia.backend.models.ActivatorState;
 import hestia.backend.models.Device;
@@ -100,7 +100,7 @@ public class DeviceBar extends RelativeLayout {
                                             serverCollectionsInteractor.removeDevice(device);
                                         } catch (IOException e) {
                                             e.printStackTrace();
-                                        } catch (ComFaultException e) {
+                                        } catch (DeviceNotFoundException e) {
                                             e.printStackTrace();
                                         }
                                         return null;
@@ -168,7 +168,7 @@ public class DeviceBar extends RelativeLayout {
                     activator.setState(state);
                 } catch (IOException e) {
                     e.printStackTrace();
-                } catch (ComFaultException e) {
+                } catch (DeviceNotFoundException e) {
                     e.printStackTrace();
                 }
                 Log.i(TAG, "Sending a post to the server");

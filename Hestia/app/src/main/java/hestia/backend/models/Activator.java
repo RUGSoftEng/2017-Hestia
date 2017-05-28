@@ -6,8 +6,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.IOException;
 
-import hestia.backend.exceptions.ComFaultException;
 import hestia.backend.NetworkHandler;
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 
 /**
  * This class represents a single activator on a device. A single device can have multiple activators.
@@ -62,7 +62,7 @@ public class Activator {
         return state;
     }
 
-    public void setState(ActivatorState state) throws IOException, ComFaultException {
+    public void setState(ActivatorState state) throws IOException, DeviceNotFoundException {
         String path = "devices/"+device.getId()+"/activators/"+activatorId;
         JsonObject send = new JsonObject();
         send.add("state", state.getRawStateJSON());
@@ -75,7 +75,7 @@ public class Activator {
             if(result.has("error")) {
                 String error = result.get("error").getAsString();
                 String message = result.get("message").getAsString();
-                throw new ComFaultException(error, message);
+                throw new DeviceNotFoundException(error, message);
             }
 
         }

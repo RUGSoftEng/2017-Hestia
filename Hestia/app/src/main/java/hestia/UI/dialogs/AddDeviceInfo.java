@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import hestia.backend.ServerCollectionsInteractor;
-import hestia.backend.exceptions.ComFaultException;
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 import hestia.backend.models.RequiredInfo;
 
 /**
@@ -98,7 +98,7 @@ public class AddDeviceInfo extends HestiaDialog {
                 } catch (IOException e) {
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
-                } catch (ComFaultException e) {
+                } catch (DeviceNotFoundException e) {
                     e.printStackTrace();
                     String error = e.getError();
                     String message = e.getMessage();
