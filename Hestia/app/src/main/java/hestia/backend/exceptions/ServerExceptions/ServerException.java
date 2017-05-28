@@ -1,6 +1,5 @@
 package hestia.backend.exceptions.ServerExceptions;
 
-
 public abstract class ServerException extends Exception {
     String message;
 
