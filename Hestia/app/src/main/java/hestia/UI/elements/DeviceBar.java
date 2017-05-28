@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.rugged.application.hestia.R;
 import java.io.IOException;
 import hestia.UI.dialogs.ChangeNameDialog;
@@ -93,20 +95,7 @@ public class DeviceBar extends RelativeLayout {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.delete:
-                                new AsyncTask<Object, Object, Void>() {
-                                    @Override
-                                    protected Void doInBackground(Object... params) {
-                                        try {
-                                            serverCollectionsInteractor.removeDevice(device);
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        } catch (DeviceNotFoundException e) {
-                                            e.printStackTrace();
-                                        }
-                                        return null;
-                                    }
-                                }.execute();
-
+                                doDeleteRequest();
                                 break;
                             case R.id.change_name:
                                 new ChangeNameDialog(getContext(), device).show();
@@ -158,27 +147,70 @@ public class DeviceBar extends RelativeLayout {
     }
 
     private void checked(final ActivatorState<Boolean> state, final Activator activator) {
-
-        new AsyncTask<Object, Object, Integer>() {
+        new AsyncTask<Object, String, Boolean>() {
             @Override
-            protected Integer  doInBackground(Object... params) {
-                Log.d(TAG, "Changed the switch to " + state);
-
+            protected Boolean doInBackground(Object... params) {
+                Boolean isSuccessful = false;
                 try {
                     activator.setState(state);
+                    isSuccessful = true;
                 } catch (IOException e) {
+                    Log.e(TAG,e.toString());
+                    String exceptionMessage = "Could not connect to the server";
+                    publishProgress(exceptionMessage);
+                } catch (ComFaultException comFaultException) {
+                    Log.e(TAG, comFaultException.toString());
+                    String error = comFaultException.getError();
+                    String message = comFaultException.getMessage();
+                    String exceptionMessage = error + ":" + message;
+                    publishProgress(exceptionMessage);
+                }
+                return isSuccessful;
+            }
+
+            @Override
+            protected void onProgressUpdate(String... exceptionMessage) {
+                Toast.makeText(context, exceptionMessage[0], Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isSuccessful) {
+                if(isSuccessful) {
+                    // Update GUI
+                }
+            }
+        }.execute();
+    }
+
+    public void doDeleteRequest() {
+        new AsyncTask<Object, String, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Object... params) {
+                Boolean isSuccessful = false;
+                try {
+                    serverCollectionsInteractor.removeDevice(device);
+                    isSuccessful = true;
+                } catch (IOException e) {
+                    Log.e(TAG,e.toString());
+                    String exceptionMessage = "Could not connect to the server";
+                    publishProgress(exceptionMessage);
                     e.printStackTrace();
                 } catch (DeviceNotFoundException e) {
                     e.printStackTrace();
                 }
-                Log.i(TAG, "Sending a post to the server");
-
-                return 0;
+                return isSuccessful;
             }
 
             @Override
-            protected void onPostExecute(Integer result) {
-                // Update GUI
+            protected void onProgressUpdate(String... exceptionMessage) {
+                Toast.makeText(context, exceptionMessage[0], Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected void onPostExecute(Boolean isSuccessful) {
+                if(isSuccessful) {
+                    // Update GUI
+                }
             }
         }.execute();
     }

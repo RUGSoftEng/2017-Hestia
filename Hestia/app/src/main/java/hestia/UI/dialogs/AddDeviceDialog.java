@@ -3,6 +3,7 @@ package hestia.UI.dialogs;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -24,6 +25,7 @@ import hestia.backend.models.RequiredInfo;
  */
 
 public class AddDeviceDialog extends HestiaDialog {
+    private static final String TAG = "AddDeviceDialog";
     private AutoCompleteTextView collectionField, pluginField;
     private ArrayAdapter<String> adapterCollections;
     private ArrayAdapter<String> adapterPlugins;
@@ -63,22 +65,32 @@ public class AddDeviceDialog extends HestiaDialog {
         final String collection = collectionField.getText().toString();
         final String pluginName = pluginField.getText().toString();
 
-         new AsyncTask<Object, Object, RequiredInfo>() {
+         new AsyncTask<Object, String, RequiredInfo>() {
             @Override
             protected RequiredInfo doInBackground(Object... params) {
                 RequiredInfo info = null;
                 try {
                     info = serverCollectionsInteractor.getRequiredInfo(collection, pluginName);
                 } catch (IOException e) {
+                  Log.e(TAG,e.toString());
+                    String exceptionMessage = "Could not connect to the server";
+                    publishProgress(exceptionMessage);
                     e.printStackTrace();
                 } catch (DeviceNotFoundException e) {
                     e.printStackTrace();
                     String error = e.getError();
                     String message = e.getMessage();
                     Toast.makeText(context, error + ":" + message, Toast.LENGTH_SHORT).show();
+
+                    
                 }
                 return info;
             }
+
+             @Override
+             protected void onProgressUpdate(String... exceptionMessage) {
+                 Toast.makeText(context, exceptionMessage[0], Toast.LENGTH_SHORT).show();
+             }
 
             @Override
             protected void onPostExecute(RequiredInfo info) {
@@ -89,21 +101,28 @@ public class AddDeviceDialog extends HestiaDialog {
         }.execute();
     }
 
-
     private void getCollections() {
-        new AsyncTask<Object, Object, ArrayList<String>>() {
+        new AsyncTask<Object, String, ArrayList<String>>() {
             @Override
             protected ArrayList<String> doInBackground(Object... params) {
                 ArrayList<String> collections = null;
                 try {
                     collections = serverCollectionsInteractor.getCollections();
                 } catch (IOException e) {
+                   Log.e(TAG,e.toString());
+                    String exceptionMessage = "Could not connect to the server";
+                    publishProgress(exceptionMessage);
                     e.printStackTrace();
                 } catch (DeviceNotFoundException e) {
                     Toast.makeText(context, e.getError() + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
-                }
+                    e.printStackTrace(); 
+                } 
                 return collections;
+            }
+
+            @Override
+            protected void onProgressUpdate(String... exceptionMessage) {
+                Toast.makeText(context, exceptionMessage[0], Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -117,25 +136,35 @@ public class AddDeviceDialog extends HestiaDialog {
     }
 
     private void getPlugins(final String collection) {
-        new AsyncTask<Object, Object, ArrayList<String>>() {
+        new AsyncTask<Object, String, ArrayList<String>>() {
             @Override
             protected ArrayList<String> doInBackground(Object... params) {
                 ArrayList<String> plugins = null;
                 try {
                     plugins = serverCollectionsInteractor.getPlugins(collection);
                 } catch (IOException e) {
+                   Log.e(TAG,e.toString());
+                    String exceptionMessage = "Could not connect to the server";
+                    publishProgress(exceptionMessage);
                     e.printStackTrace();
                 } catch (DeviceNotFoundException e) {
                     Toast.makeText(context, e.getError() + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    e.printStackTrace();
+                    e.printStackTrace();                   
                 }
                 return plugins;
             }
 
             @Override
-            protected void onPostExecute(ArrayList<String> collections) {
+            protected void onProgressUpdate(String... exceptionMessage) {
+                Toast.makeText(context, exceptionMessage[0], Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            protected void onPostExecute(ArrayList<String> plugins) {
                 adapterPlugins.clear();
-                adapterPlugins.addAll(collections);
+                if(plugins != null) {
+                    adapterPlugins.addAll(plugins);
+                }
             }
         }.execute();
     }

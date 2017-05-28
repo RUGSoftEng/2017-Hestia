@@ -4,11 +4,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.rugged.application.hestia.R;
 
 import java.io.IOException;
@@ -27,6 +30,7 @@ import hestia.backend.models.Device;
 public class SlideDialog extends Dialog implements android.view.View.OnClickListener{
     private Device device;
     private Context context;
+    private final String TAG = "SlideDialog";
 
     public SlideDialog(Context context, Device device) {
         super(context);
@@ -79,7 +83,7 @@ public class SlideDialog extends Dialog implements android.view.View.OnClickList
                 float value = (float)seekBar.getProgress()/maxInt;
                 final ActivatorState<Float> state = act.getState();
                 state.setRawState(value);
-                new AsyncTask<Object, Object, Boolean>() {
+                new AsyncTask<Object, String, Boolean>() {
                     @Override
                     protected Boolean doInBackground(Object... params) {
                         Boolean isSuccessful = false;
@@ -87,11 +91,19 @@ public class SlideDialog extends Dialog implements android.view.View.OnClickList
                             activator.setState(state);
                             isSuccessful = true;
                         } catch (IOException e) {
+                           Log.e(TAG,e.toString());
+                            String exceptionMessage = "Could not connect to the server";
+                            publishProgress(exceptionMessage);
                             e.printStackTrace();
                         } catch (DeviceNotFoundException e) {
                             e.printStackTrace();
                         }
                         return isSuccessful;
+                    }
+
+                    @Override
+                    protected void onProgressUpdate(String... exceptionMessage) {
+                        Toast.makeText(context, exceptionMessage[0], Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

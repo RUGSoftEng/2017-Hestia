@@ -26,7 +26,6 @@ public class IpDialog extends HestiaDialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ipField = (EditText) findViewById(R.id.ip);
         ipField.setText(this.serverCollectionsInteractor.getHandler().getIp());
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -38,8 +37,9 @@ public class IpDialog extends HestiaDialog {
         if(ip!=null) {
             serverCollectionsInteractor.getHandler().setIp(ip);
             // TODO refresh layout
-            Toast.makeText(getContext(),R.string.ipSetTo + serverCollectionsInteractor.getHandler().getIp() + ":"
-                    + serverCollectionsInteractor.getHandler().getPort(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),getContext().getString(R.string.ipSetTo)
+                    + serverCollectionsInteractor.getHandler().getIp() + ":"
+                    + serverCollectionsInteractor.getHandler().getPort(),Toast.LENGTH_LONG).show();
 
             //TODO give correct response from server after changing ip
             Toast.makeText(getContext(), "Server returned message: + serverMessage",

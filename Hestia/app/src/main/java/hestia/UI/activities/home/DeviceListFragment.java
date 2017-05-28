@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import hestia.UI.elements.DeviceBar;
 import hestia.UI.dialogs.AddDeviceDialog;
@@ -32,7 +33,6 @@ import java.util.ArrayList;
 public class DeviceListFragment extends Fragment{
     private ServerCollectionsInteractor serverCollectionsInteractor;
     private Context context;
-
     private SwipeRefreshLayout swipeRefreshLayout;
     private ExpandableDeviceList listAdapter;
     private ExpandableListView expListView;
@@ -75,7 +75,7 @@ public class DeviceListFragment extends Fragment{
     }
     
     private void populateUI() {
-        new AsyncTask<Object, Object, ArrayList<Device> >() {
+        new AsyncTask<Object, String, ArrayList<Device> >() {
             @Override
             protected ArrayList<Device>  doInBackground(Object... params) {
                 ArrayList<Device> devices = new ArrayList<>();
@@ -85,8 +85,15 @@ public class DeviceListFragment extends Fragment{
                     e.printStackTrace();
                 } catch (DeviceNotFoundException e) {
                     e.printStackTrace();
+
+                }
                 }
                 return devices;
+            }
+
+            @Override
+            protected void onProgressUpdate(String... exceptionMessage) {
+                Toast.makeText(context, exceptionMessage[0], Toast.LENGTH_SHORT).show();
             }
 
             @Override
