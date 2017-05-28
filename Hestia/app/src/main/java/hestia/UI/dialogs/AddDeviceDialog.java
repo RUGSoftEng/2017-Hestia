@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import hestia.backend.ServerCollectionsInteractor;
-import hestia.backend.exceptions.ComFaultException;
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 import hestia.backend.models.RequiredInfo;
 
 /**
@@ -72,15 +72,17 @@ public class AddDeviceDialog extends HestiaDialog {
                 try {
                     info = serverCollectionsInteractor.getRequiredInfo(collection, pluginName);
                 } catch (IOException e) {
-                    Log.e(TAG,e.toString());
+                  Log.e(TAG,e.toString());
                     String exceptionMessage = "Could not connect to the server";
                     publishProgress(exceptionMessage);
-                } catch (ComFaultException comFaultException) {
-                    Log.e(TAG, comFaultException.toString());
-                    String error = comFaultException.getError();
-                    String message = comFaultException.getMessage();
-                    String exceptionMessage = error + ":" + message;
-                    publishProgress(exceptionMessage);
+                    e.printStackTrace();
+                } catch (DeviceNotFoundException e) {
+                    e.printStackTrace();
+                    String error = e.getError();
+                    String message = e.getMessage();
+                    Toast.makeText(context, error + ":" + message, Toast.LENGTH_SHORT).show();
+
+                    
                 }
                 return info;
             }
@@ -107,16 +109,14 @@ public class AddDeviceDialog extends HestiaDialog {
                 try {
                     collections = serverCollectionsInteractor.getCollections();
                 } catch (IOException e) {
-                    Log.e(TAG,e.toString());
+                   Log.e(TAG,e.toString());
                     String exceptionMessage = "Could not connect to the server";
                     publishProgress(exceptionMessage);
-                } catch (ComFaultException comFaultException) {
-                    Log.e(TAG, comFaultException.toString());
-                    String error = comFaultException.getError();
-                    String message = comFaultException.getMessage();
-                    String exceptionMessage = error + ":" + message;
-                    publishProgress(exceptionMessage);
-                }
+                    e.printStackTrace();
+                } catch (DeviceNotFoundException e) {
+                    Toast.makeText(context, e.getError() + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace(); 
+                } 
                 return collections;
             }
 
@@ -143,15 +143,13 @@ public class AddDeviceDialog extends HestiaDialog {
                 try {
                     plugins = serverCollectionsInteractor.getPlugins(collection);
                 } catch (IOException e) {
-                    Log.e(TAG,e.toString());
+                   Log.e(TAG,e.toString());
                     String exceptionMessage = "Could not connect to the server";
                     publishProgress(exceptionMessage);
-                } catch (ComFaultException comFaultException) {
-                    Log.e(TAG, comFaultException.toString());
-                    String error = comFaultException.getError();
-                    String message = comFaultException.getMessage();
-                    String exceptionMessage = error + ":" + message;
-                    publishProgress(exceptionMessage);
+                    e.printStackTrace();
+                } catch (DeviceNotFoundException e) {
+                    Toast.makeText(context, e.getError() + ": " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();                   
                 }
                 return plugins;
             }

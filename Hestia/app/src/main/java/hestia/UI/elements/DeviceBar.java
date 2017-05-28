@@ -18,7 +18,7 @@ import java.io.IOException;
 import hestia.UI.dialogs.ChangeNameDialog;
 import hestia.UI.dialogs.SlideDialog;
 import hestia.backend.ServerCollectionsInteractor;
-import hestia.backend.exceptions.ComFaultException;
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 import hestia.backend.models.Activator;
 import hestia.backend.models.ActivatorState;
 import hestia.backend.models.Device;
@@ -194,12 +194,9 @@ public class DeviceBar extends RelativeLayout {
                     Log.e(TAG,e.toString());
                     String exceptionMessage = "Could not connect to the server";
                     publishProgress(exceptionMessage);
-                } catch (ComFaultException comFaultException) {
-                    Log.e(TAG, comFaultException.toString());
-                    String error = comFaultException.getError();
-                    String message = comFaultException.getMessage();
-                    String exceptionMessage = error + ":" + message;
-                    publishProgress(exceptionMessage);
+                    e.printStackTrace();
+                } catch (DeviceNotFoundException e) {
+                    e.printStackTrace();
                 }
                 return isSuccessful;
             }

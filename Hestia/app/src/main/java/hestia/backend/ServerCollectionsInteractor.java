@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import hestia.backend.exceptions.ComFaultException;
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 import hestia.backend.models.Device;
 import hestia.backend.models.deserializers.DeviceDeserializer;
 import hestia.backend.models.RequiredInfo;
@@ -27,7 +27,7 @@ public class ServerCollectionsInteractor {
         this.handler = handler;
     }
 
-    public ArrayList<Device> getDevices() throws IOException, ComFaultException {
+    public ArrayList<Device> getDevices() throws IOException, DeviceNotFoundException {
         String endpoint = "devices/";
         JsonElement payload = handler.GET(endpoint);
         if(payload.isJsonArray()) {
@@ -44,11 +44,11 @@ public class ServerCollectionsInteractor {
             JsonObject jsonObject = payload.getAsJsonObject();
             String error = jsonObject.get("error").getAsString();
             String message = jsonObject.get("message").getAsString();
-            throw new ComFaultException(error, message);
+            throw new DeviceNotFoundException(error, message);
         }
     }
 
-    public void addDevice(RequiredInfo info) throws IOException, ComFaultException {
+    public void addDevice(RequiredInfo info) throws IOException, DeviceNotFoundException {
         JsonObject send = new JsonObject();
         send.addProperty("collection", info.getCollection());
         send.addProperty("plugin_name", info.getPlugin());
@@ -64,12 +64,12 @@ public class ServerCollectionsInteractor {
             if(object.has("error")) {
                 String error = object.get("error").getAsString();
                 String message = object.get("message").getAsString();
-                throw new ComFaultException(error, message);
+                throw new DeviceNotFoundException(error, message);
             }
         }
     }
 
-    public void removeDevice(Device device) throws IOException, ComFaultException {
+    public void removeDevice(Device device) throws IOException, DeviceNotFoundException {
         String endpoint = "devices/" + device.getId();
         JsonElement payload = handler.DELETE(endpoint);
         if(payload != null && payload.isJsonObject()) {
@@ -77,29 +77,29 @@ public class ServerCollectionsInteractor {
             if(jsonObject.has("error")) {
                 String error = jsonObject.get("error").getAsString();
                 String message = jsonObject.get("message").getAsString();
-                throw new ComFaultException(error, message);
+                throw new DeviceNotFoundException(error, message);
             }
         }
     }
 
-    public ArrayList<String> getCollections() throws IOException, ComFaultException {
+    public ArrayList<String> getCollections() throws IOException, DeviceNotFoundException {
         JsonElement object = handler.GET("plugins");
         return ParseInfo(object);
     }
 
-    public ArrayList<String> getPlugins(String collection) throws IOException, ComFaultException {
+    public ArrayList<String> getPlugins(String collection) throws IOException, DeviceNotFoundException {
         JsonElement object = handler.GET("plugins/" + collection);
         return ParseInfo(object);
     }
 
-    public RequiredInfo getRequiredInfo(String collection, String plugin) throws IOException, ComFaultException {
+    public RequiredInfo getRequiredInfo(String collection, String plugin) throws IOException, DeviceNotFoundException {
         JsonElement rawObject = handler.GET("plugins/" + collection + "/plugins/" + plugin);
         if (rawObject.isJsonObject()) {
             JsonObject object = rawObject.getAsJsonObject();
             if(object.has("error")) {
                 String error = object.get("error").getAsString();
                 String message = object.get("message").getAsString();
-                throw new ComFaultException(error, message);
+                throw new DeviceNotFoundException(error, message);
             } else {
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 gsonBuilder.registerTypeAdapter(RequiredInfo.class, new RequiredInfoDeserializer());
@@ -112,7 +112,7 @@ public class ServerCollectionsInteractor {
         return null;
     }
 
-    private ArrayList<String> ParseInfo(JsonElement element) throws ComFaultException {
+    private ArrayList<String> ParseInfo(JsonElement element) throws DeviceNotFoundException {
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         if(element.isJsonArray()) {
@@ -121,8 +121,8 @@ public class ServerCollectionsInteractor {
             }.getType());
             return list;
         } else if (element.getAsJsonObject().has("error")){
-            ComFaultException comFaultException=gson.fromJson(element,ComFaultException.class);
-            throw comFaultException;
+            DeviceNotFoundException deviceNotFoundException =gson.fromJson(element,DeviceNotFoundException.class);
+            throw deviceNotFoundException;
         }
         return new ArrayList<>();
     }

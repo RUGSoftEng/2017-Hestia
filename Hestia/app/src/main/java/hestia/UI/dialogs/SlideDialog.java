@@ -17,7 +17,7 @@ import com.rugged.application.hestia.R;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import hestia.backend.exceptions.ComFaultException;
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 import hestia.backend.models.Activator;
 import hestia.backend.models.ActivatorState;
 import hestia.backend.models.Device;
@@ -91,15 +91,12 @@ public class SlideDialog extends Dialog implements android.view.View.OnClickList
                             activator.setState(state);
                             isSuccessful = true;
                         } catch (IOException e) {
-                            Log.e(TAG,e.toString());
+                           Log.e(TAG,e.toString());
                             String exceptionMessage = "Could not connect to the server";
                             publishProgress(exceptionMessage);
-                        } catch (ComFaultException comFaultException) {
-                            Log.e(TAG, comFaultException.toString());
-                            String error = comFaultException.getError();
-                            String message = comFaultException.getMessage();
-                            String exceptionMessage = error + ":" + message;
-                            publishProgress(exceptionMessage);
+                            e.printStackTrace();
+                        } catch (DeviceNotFoundException e) {
+                            e.printStackTrace();
                         }
                         return isSuccessful;
                     }

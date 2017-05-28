@@ -18,7 +18,7 @@ import android.widget.Toast;
 import hestia.UI.elements.DeviceBar;
 import hestia.UI.dialogs.AddDeviceDialog;
 import hestia.backend.ServerCollectionsInteractor;
-import hestia.backend.exceptions.ComFaultException;
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 import hestia.backend.models.Device;
 
 import com.rugged.application.hestia.R;
@@ -82,15 +82,11 @@ public class DeviceListFragment extends Fragment{
                 try {
                     devices = serverCollectionsInteractor.getDevices();
                 } catch (IOException e) {
-                    Log.e(TAG, e.toString());
-                    String exceptionMessage = "Could not connect to the server";
-                    publishProgress(exceptionMessage);
-                } catch (ComFaultException comFaultException) {
-                    Log.e(TAG, comFaultException.toString());
-                    String error = comFaultException.getError();
-                    String message = comFaultException.getMessage();
-                    String exceptionMessage = error + ":" + message;
-                    publishProgress(exceptionMessage);
+                    e.printStackTrace();
+                } catch (DeviceNotFoundException e) {
+                    e.printStackTrace();
+
+                }
                 }
                 return devices;
             }

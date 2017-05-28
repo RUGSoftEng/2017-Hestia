@@ -7,8 +7,8 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import hestia.backend.exceptions.ComFaultException;
 import hestia.backend.NetworkHandler;
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 
 /**
  * Represents the internal representation of the device class on the client. The device contains an
@@ -69,7 +69,7 @@ public class Device {
         return name;
     }
 
-    public void setName(String name) throws IOException, ComFaultException {
+    public void setName(String name) throws IOException, DeviceNotFoundException {
         String path = "devices/" + deviceId;
         JsonObject object = new JsonObject();
         object.addProperty("name", name);
@@ -77,8 +77,8 @@ public class Device {
         if(payload.isJsonObject() && payload.getAsJsonObject().has("error")){
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
-            ComFaultException comFaultException = gson.fromJson(payload, ComFaultException.class);
-            throw comFaultException;
+            DeviceNotFoundException deviceNotFoundException = gson.fromJson(payload, DeviceNotFoundException.class);
+            throw deviceNotFoundException;
         }else {
             this.name = name;
         }

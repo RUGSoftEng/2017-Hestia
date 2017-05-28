@@ -10,7 +10,8 @@ import android.widget.Toast;
 
 import com.rugged.application.hestia.R;
 import java.io.IOException;
-import hestia.backend.exceptions.ComFaultException;
+
+import hestia.backend.exceptions.ServerExceptions.DeviceNotFoundException;
 import hestia.backend.models.Device;
 
 public class ChangeNameDialog extends HestiaDialog {
@@ -41,15 +42,14 @@ public class ChangeNameDialog extends HestiaDialog {
                     device.setName(result);
                     isSuccessful = true;
                 } catch (IOException e) {
+                  
                     Log.e(TAG,e.toString());
                     String exceptionMessage = "Could not connect to the server";
                     publishProgress(exceptionMessage);
-                } catch (ComFaultException comFaultException) {
-                    Log.e(TAG, comFaultException.toString());
-                    String error = comFaultException.getError();
-                    String message = comFaultException.getMessage();
-                    String exceptionMessage = error + ":" + message;
-                    publishProgress(exceptionMessage);
+                    e.printStackTrace();
+                } catch (DeviceNotFoundException e) {
+                    Log.d("comFault",e.getError()+":" +e.getMessage());
+                    e.printStackTrace();
                 }
                 return isSuccessful;
             }
