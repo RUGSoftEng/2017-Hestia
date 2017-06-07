@@ -80,7 +80,6 @@ public class ChangeIpDialog extends HestiaDialog {
                         String serviceName = getResources().getString(R.string.serviceName);
                         String serviceType = getResources().getString(R.string.serviceType);
                         NsdHelper nsdHelper = new NsdHelper(nsdManager, serviceName, serviceType);
-                        nsdHelper.registerService(R.string.default_port);
                         nsdHelper.discoverServices();
                         NsdServiceInfo serviceInfo = nsdHelper.getServiceInfo();
                         return serviceInfo;

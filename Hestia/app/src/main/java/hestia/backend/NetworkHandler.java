@@ -81,10 +81,8 @@ public class NetworkHandler extends Application {
      * @throws IOException
      */
     private HttpsURLConnection connectToSecureServer(String requestMethod, String endpoint) throws IOException {
-
         String path = this.getDefaultPath() + endpoint;
         URL url = new URL(path);
-        Log.i(TAG, "Attempting to connect to server:" + url);
         HttpsURLConnection connector = (HttpsURLConnection) url.openConnection();
         connector.setReadTimeout(2000);
         connector.setConnectTimeout(2000);
