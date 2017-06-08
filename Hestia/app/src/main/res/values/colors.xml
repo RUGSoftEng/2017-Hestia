@@ -11,6 +11,7 @@
     <color name="listGroup">#ADE0F0</color>
     <color name="background">#ffffff</color>
     <color name="text">#ffffff</color>
+    <color name="textitem">#25224A</color>
     <color name="fab">#25224A</color>
     <color name="switch_color">#25224A</color>
 

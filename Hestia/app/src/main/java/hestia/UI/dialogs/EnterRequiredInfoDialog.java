@@ -38,10 +38,6 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
     private RequiredInfo info;
     private ServerCollectionsInteractor serverCollectionsInteractor;
     private final String TAG = "EnterRequiredInfoDialog";
-    private final String fixedFieldCol = "collection";
-    private final String fixedFieldPlugin = "plugin";
-    private final String propReqInfo = "required_info";
-    private static final String EMPTY_STRING="";
     private View view;
 
     public static EnterRequiredInfoDialog newInstance() {
@@ -121,7 +117,8 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
                 return true;
             }
         });
-        if (key.equals(fixedFieldCol)||key.equals(fixedFieldPlugin)) {
+        if (key.equals(getString(R.string.fixedFieldCol))||
+                key.equals(getString(R.string.fixedFieldPlugin))) {
             field.setFocusable(false);
             field.setClickable(false);
         }

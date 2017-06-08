@@ -2,6 +2,10 @@ package com.rugged.application.hestia.UI.activities.login;
 
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
+
+import com.rugged.application.hestia.R;
+import com.rugged.application.hestia.UI.UiTest;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +22,7 @@ import static com.rugged.application.hestia.R.id.context_menu;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
-public class LogoutTest {
-    private final String LOGOUT_TEXT = "Logout ";
-    private final String PACKAGE_NAME = "com.rugged.application.hestia";
+public class LogoutTest extends UiTest {
 
     @Rule
     public IntentsTestRule<HomeActivity> mIntentsRule =
@@ -29,9 +31,9 @@ public class LogoutTest {
     @Test
     public void logoutTest(){
         onView(withId(context_menu)).perform(click());
-        onView(withText(LOGOUT_TEXT)).perform(click());
+        onView(withText(getStr(R.string.logout))).perform(click());
         intended(allOf(
-                hasComponent(hasShortClassName("hestia.UI.activities.login.LoginActivity")),
+                hasComponent(hasShortClassName(LOGIN_ACTIVITY)),
                 toPackage(PACKAGE_NAME)));
     }
 

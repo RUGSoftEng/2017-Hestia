@@ -57,7 +57,7 @@ public class AddDeviceDialog extends HestiaDialog {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.add_device_dialog, null);
 
-        getCollections(); // Start retrieving the collections from the server
+        getCollections();
 
         buildCollectionsField(view);
         buildPluginField(view);
@@ -67,7 +67,7 @@ public class AddDeviceDialog extends HestiaDialog {
 
     @Override
     void pressCancel() {
-        Toast.makeText(getContext(), "Cancel pressed", Toast.LENGTH_SHORT).show();
+        dismiss();
     }
 
     @Override

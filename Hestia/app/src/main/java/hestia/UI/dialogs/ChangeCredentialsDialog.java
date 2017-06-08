@@ -1,14 +1,9 @@
 package hestia.UI.dialogs;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.rugged.application.hestia.R;
@@ -25,11 +20,6 @@ public class ChangeCredentialsDialog extends HestiaDialog {
     private EditText oldPassField, newPassField, newPassCheckField, newUserField;
     private SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
-    private final String pass_old_wrong = "Old password is incorrect ";
-    private final String pass_check_wrong = "New password not set ";
-    private final String pass_set = "Password set to : ";
-    private final String user_set = "Username set to : ";
-    private final String user_not_set = "Username not changed (length<5)";
 
     public static ChangeCredentialsDialog newInstance() {
         ChangeCredentialsDialog fragment = new ChangeCredentialsDialog();
@@ -61,26 +51,27 @@ public class ChangeCredentialsDialog extends HestiaDialog {
         String newPass = newPassField.getText().toString();
         String newPassCheck = newPassCheckField.getText().toString();
         String oldPass = oldPassField.getText().toString();
-        loginPreferences = getActivity().getSharedPreferences(LoginActivity.LOGIN_PREFERENCES
+        loginPreferences = getActivity().getSharedPreferences(getString(R.string.loginPrefs)
                 , Context.MODE_PRIVATE);
 
         String feedback = "";
         if(checkOldPass(oldPass)){
             if(newPass.equals(newPassCheck) && !newPass.equals("")){
-                setSharedPrefs(LoginActivity.prefsPass, hashString(newPass));
-                feedback = pass_set + newPass + "\n";
+                setSharedPrefs(getString(R.string.loginPrefsPass
+                ), hashString(newPass));
+                feedback = getString(R.string.passSet) + newPass + "\n";
             } else{
-                feedback = pass_check_wrong + "\n";
+                feedback = getString(R.string.passCheckWrong) + "\n";
             }
             if(newUser.length()>4){
-                setSharedPrefs(LoginActivity.prefsUser,hashString(newUser));
-                feedback = feedback + user_set + newUser;
+                setSharedPrefs(getString(R.string.loginPrefsUser),hashString(newUser));
+                feedback = feedback + getString(R.string.userSet) + newUser;
             } else {
-                feedback = feedback + user_not_set;
+                feedback = feedback + getString(R.string.userNotSet);
             }
             showToast(feedback);
         } else {
-            showToast(pass_old_wrong);
+            showToast(getString(R.string.passOldWrong));
         }
         dismiss();
     }
@@ -91,7 +82,7 @@ public class ChangeCredentialsDialog extends HestiaDialog {
     }
 
     private boolean checkOldPass(String oldPass){
-        String corrpass = loginPreferences.getString(LoginActivity.prefsPass, "");
+        String corrpass = loginPreferences.getString(getString(R.string.loginPrefsPass), "");
         return corrpass.equals(hashString(oldPass));
     }
 

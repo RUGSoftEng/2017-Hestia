@@ -1,10 +1,13 @@
 package com.rugged.application.hestia.UI.activities.login;
 
+import android.content.res.Resources;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 import com.rugged.application.hestia.R;
+import com.rugged.application.hestia.UI.UiTest;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,14 +27,8 @@ import static com.rugged.application.hestia.R.id.context_menu;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
-public class LoginTest {
-    private final String USERNAME = "admin";
-    private final String PASSWORD = "password";
-    private final String PACKAGE_NAME = "com.rugged.application.hestia";
-    private final String LOGOUT_TEXT = "Logout ";
+public class LoginTest extends UiTest {
 
-
-    /* Instantiate an IntentsTestRule object. */
     @Rule
     public IntentsTestRule<LoginActivity> mIntentsRule =
             new IntentsTestRule<>(LoginActivity.class);
@@ -44,19 +41,21 @@ public class LoginTest {
             onView(ViewMatchers.withId(R.id.username)).perform(click());
         } catch(NoMatchingViewException e) {
             onView(withId(context_menu)).perform(click());
-            onView(withText(LOGOUT_TEXT)).perform(click());
+            onView(withText(getStr(R.string.logout))).perform(click());
         }
     }
 
     @Test
     public void checkLogin() {
         // Login with 'remember me'
-        onView(ViewMatchers.withId(R.id.username)).perform(typeText(USERNAME), closeSoftKeyboard());
-        onView(withId(R.id.password)).perform(typeText(PASSWORD), closeSoftKeyboard());
+        onView(ViewMatchers.withId(R.id.username)).
+                perform(typeText(getStr(R.string.standardUser)), closeSoftKeyboard());
+        onView(withId(R.id.password)).
+                perform(typeText(getStr(R.string.standardPass)), closeSoftKeyboard());
         onView(withId(R.id.rememberButton)).perform(click());
         onView(withId(R.id.loginButton)).perform(click());
         intended(allOf(
-                hasComponent(hasShortClassName("hestia.UI.activities.home.HomeActivity")),
+                hasComponent(hasShortClassName(HOME_ACTIVITY)),
                 toPackage(PACKAGE_NAME)));
 
     }
