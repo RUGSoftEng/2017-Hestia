@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.net.nsd.NsdManager;
 import android.net.nsd.NsdServiceInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,11 +14,8 @@ import android.widget.Toast;
 
 import com.rugged.application.hestia.R;
 
-import hestia.backend.NetworkHandler;
+import hestia.UI.HestiaApplication;
 import hestia.backend.ServerCollectionsInteractor;
-import hestia.backend.serverDiscovery.NsdHelper;
-
-import static android.content.Context.WIFI_SERVICE;
 
 /**
  * This class represents the dialog screen with which the IP-address of the server is asked from the
@@ -31,8 +27,12 @@ public class ChangeIpDialog extends HestiaDialog {
     private String ip;
     private EditText ipField;
     private Button discoveryButton;
-
     private ServerCollectionsInteractor serverCollectionsInteractor;
+    private NsdManager nsdManager;
+    private NsdManager.ResolveListener resolveListener;
+    private NsdManager.DiscoveryListener discoveryListener;
+    private String serviceName;
+    private String serviceType;
 
     public static ChangeIpDialog newInstance() {
         ChangeIpDialog fragment = new ChangeIpDialog();
@@ -52,8 +52,9 @@ public class ChangeIpDialog extends HestiaDialog {
     View buildView() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         View view = inflater.inflate(R.layout.ip_dialog, null);
+        nsdManager = (NsdManager) HestiaApplication.getContext().getSystemService(Context.NSD_SERVICE);
 
-        this.addDiscoveryButton2(view);
+        this.addDiscoveryButton(view);
         this.addIpField(view);
 
         return view;
@@ -71,101 +72,126 @@ public class ChangeIpDialog extends HestiaDialog {
         }
     }
 
-    /*
+
     public void addDiscoveryButton(View view) {
         discoveryButton = (Button) view.findViewById(R.id.findServerButton);
         discoveryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                new AsyncTask<Object, Object, NsdServiceInfo>() {
+                if(discoveryListener != null) nsdManager.stopServiceDiscovery(discoveryListener);
+                new AsyncTask<Object, Object, Void>() {
                     @Override
-                    protected NsdServiceInfo doInBackground(Object... params) {
-                        NsdManager nsdManager = (NsdManager) getContext().getSystemService(Context.NSD_SERVICE);
-                        String serviceName = getResources().getString(R.string.serviceName);
-                        String serviceType = getResources().getString(R.string.serviceType);
-                        NsdHelper nsdHelper = new NsdHelper(nsdManager, serviceName, serviceType);
-                        nsdHelper.discoverServices();
-                        NsdServiceInfo serviceInfo = nsdHelper.getServiceInfo();
-                        return serviceInfo;
+                    protected Void doInBackground(Object... params) {
+                        serviceName = getResources().getString(R.string.serviceName);
+                        serviceType = getResources().getString(R.string.serviceType);
+                        initializeDiscoveryListener();
+                        initializeResolveListener();
+                        startDiscovery();
+
+                        return null;
                     }
 
-                    @Override
-                    protected void onPostExecute(NsdServiceInfo serviceInfo) {
-                        if(serviceInfo != null) {
-                            Log.d(TAG, "ServiceInfo is NOT null");
-                            String ip = serviceInfo.getHost().getHostAddress();
-                            Integer port = serviceInfo.getPort();
-                            serverCollectionsInteractor.setHandler(new NetworkHandler(ip, port));
-                            //nsdHelper.tearDown();
-                        } else {
-                            Log.d(TAG, "ServiceInfo is null");
-                            String message = "Server not found, enter the IP manually";
-                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
                 }.execute();
             }
         });
     }
-    */
 
-    public void addDiscoveryButton2(View view) {
-        discoveryButton = (Button) view.findViewById(R.id.findServerButton);
-        discoveryButton.setOnClickListener(new View.OnClickListener() {
+    private void initializeDiscoveryListener() {
+        discoveryListener = new NsdManager.DiscoveryListener() {
             @Override
-            public void onClick(final View view) {
-                new AsyncTask<Object, Object, NsdHelper>() {
-                    @Override
-                    protected NsdHelper doInBackground(Object... params) {
-                        NsdManager nsdManager = (NsdManager) getContext().getSystemService(Context.NSD_SERVICE);
-                        WifiManager wifi = (WifiManager) getContext().getSystemService(WIFI_SERVICE);
-                        String serviceName = getResources().getString(R.string.serviceName);
-                        String serviceType = getResources().getString(R.string.serviceType);
-                        NsdHelper nsdHelper = new NsdHelper(nsdManager, wifi, serviceName, serviceType);
-                        nsdHelper.discoverServices();
-                        return nsdHelper;
-                    }
-
-                    @Override
-                    protected void onPostExecute(NsdHelper nsdHelper) {
-                        NsdServiceInfo serviceInfo = nsdHelper.getServiceInfo();
-                        String ipAddress = nsdHelper.getHostIpAddress();
-                        if(ipAddress != null) {
-                            Log.d(TAG, "IpAddress = " + ipAddress);
-                        } else {
-                            Log.d(TAG, "IpAddress is NULL");
-                        }
-                        if(serviceInfo != null) {
-                            Log.d(TAG, "ServiceInfo is NOT null");
-                            String ip = serviceInfo.getHost().getHostAddress();
-                            Integer port = serviceInfo.getPort();
-                            serverCollectionsInteractor.setHandler(new NetworkHandler(ip, port));
-                        } else {
-                            Log.d(TAG, "ServiceInfo is null");
-                            String message = "Server not found, enter the IP manually";
-                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                        }
-                        nsdHelper.tearDown();
-                    }
-                }.execute();
+            public void onDiscoveryStarted(String regType) {
+                Log.d(TAG, "Service discovery started");
+                Log.d(TAG, "  Service name: " + serviceName);
+                Log.d(TAG, "  Service type: " + serviceType);
             }
-        });
+
+            @Override
+            public void onServiceFound(NsdServiceInfo service) {
+                Log.d(TAG, "Service discovery success : " + service);
+                Log.d(TAG, "  Host = "+ service.getServiceName());
+                Log.d(TAG, "  Port = " + String.valueOf(service.getPort()));
+
+                if (!service.getServiceType().equals(serviceType)) {
+                    Log.d(TAG, "Unknown Service Type: " + service.getServiceType());
+                } else if (service.getServiceName().equals(serviceName)) {
+                    Log.d(TAG, "Same machine: " + serviceName);
+                } else {
+                    Log.d(TAG, "Diff Machine : " + service.getServiceName());
+                    nsdManager.resolveService(service, resolveListener);
+                }
+            }
+
+            @Override
+            public void onServiceLost(NsdServiceInfo service) {
+                Log.e(TAG, "service lost: " + service);
+            }
+
+            @Override
+            public void onDiscoveryStopped(String serviceType) {
+                Log.d(TAG, "Discovery stopped: " + serviceType);
+            }
+
+            @Override
+            public void onStartDiscoveryFailed(String serviceType, int errorCode) {
+                Log.e(TAG, "Discovery failed: Error code:" + errorCode);
+                nsdManager.stopServiceDiscovery(this);
+            }
+
+            @Override
+            public void onStopDiscoveryFailed(String serviceType, int errorCode) {
+                Log.e(TAG, "Discovery failed: Error code:" + errorCode);
+                nsdManager.stopServiceDiscovery(this);
+            }
+        };
+    }
+
+    private void initializeResolveListener() {
+        resolveListener = new NsdManager.ResolveListener() {
+            @Override
+            public void onServiceResolved(NsdServiceInfo serviceInfo) {
+                Log.d(TAG, "Resolve Succeeded. " + serviceInfo);
+                if (serviceInfo.getServiceName().equals(serviceName)) {
+                    Log.d(TAG, "Same IP.");
+                    return;
+                }
+                // TODO: do something once the code was found
+                ip = serviceInfo.getHost().getHostAddress();
+                Log.d(TAG, "Host ip: " + ip);
+                ipField.setText(ip);
+            }
+
+            @Override
+            public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
+                Log.e(TAG, "Resolve failed. ErrorCode = " + errorCode);
+                Log.e(TAG, "   Failed Service = " + serviceInfo);
+            }
+        };
+    }
+
+    private void startDiscovery() {
+        nsdManager.discoverServices(serviceType, NsdManager.PROTOCOL_DNS_SD, discoveryListener);
     }
 
     @Override
     public void pressConfirm() {
         ip = ipField.getText().toString();
         Log.i(TAG, "My ip is now:" + ip);
-        if(ip!=null) {
+        if(ip != null) {
             serverCollectionsInteractor.getHandler().setIp(ip);
             Log.i(TAG, "My ip is changed to: " + ip);
             Toast.makeText(getContext(), serverCollectionsInteractor.getHandler().getIp(),
                     Toast.LENGTH_SHORT).show();
+        }
+        if(discoveryListener != null) {
+            nsdManager.stopServiceDiscovery(discoveryListener);
         }
     }
 
     @Override
     public void pressCancel() {
         Toast.makeText(getContext(), "Cancel pressed", Toast.LENGTH_SHORT).show();
+        if(discoveryListener != null) {
+            nsdManager.stopServiceDiscovery(discoveryListener);
+        }
     }
 }
