@@ -10,17 +10,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.rugged.application.hestia.R;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
+
 import hestia.UI.activities.home.HomeActivity;
-import hestia.backend.NetworkHandler;
-import hestia.backend.ServerCollectionsInteractor;
-import hestia.backend.exceptions.ComFaultException;
 
 /**
  *  This class handles the login activity.
@@ -69,12 +67,11 @@ public class LoginActivity extends Activity  {
         attemptsText.setVisibility(View.GONE);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
-            /* Button has been clicked, get and check credentials */
             @Override
             public void onClick(View view) {
                 username = userField.getText().toString();
                 password = passField.getText().toString();
-                if(checkCredentials(username,password)){
+                if(checkCredentials(username,password)) {
                     if (rememberButton.isChecked()) {
                         setSharedPreferences(username,password,true);
                     } else {
@@ -82,9 +79,9 @@ public class LoginActivity extends Activity  {
                     }
                     showLoginToast(getString(R.string.correctLoginToast));
                     gotoMainActivity();
-                }else{
+                } else {
                     showLoginToast(getString(R.string.incorrectLoginToast));
-                    editLoginAttempts();
+                    decreaseLoginAttempts();
                 }
             }
         });
@@ -118,7 +115,7 @@ public class LoginActivity extends Activity  {
         loginPrefsEditor.apply();
     }
 
-    private void editLoginAttempts(){
+    private void decreaseLoginAttempts(){
         attemptsText.setVisibility(View.VISIBLE);
         counter--;
         attemptsText.setText(String.format(Locale.getDefault(), "%d",counter));

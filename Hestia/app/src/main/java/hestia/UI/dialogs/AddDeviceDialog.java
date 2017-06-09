@@ -1,30 +1,29 @@
 package hestia.UI.dialogs;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
+
 import com.rugged.application.hestia.R;
+
 import java.io.IOException;
 import java.util.ArrayList;
+
 import hestia.backend.ServerCollectionsInteractor;
 import hestia.backend.exceptions.ComFaultException;
 import hestia.backend.models.RequiredInfo;
 
 /**
-* This class opens the dialog to enter the collection name and plugin name.
-* It then sends this to the networkHandler which tries to get the required info.
-* If this works it consecutively opens a new dialog for the other info.
-* @see EnterRequiredInfoDialog
+ * This class opens the dialog to enter the collection name and plugin name.
+ * It then sends this to the networkHandler which tries to get the required info.
+ * If this works it consecutively opens a new dialog for the other info.
+ *
+ * @see EnterRequiredInfoDialog
  */
 
 public class AddDeviceDialog extends HestiaDialog {
@@ -83,7 +82,7 @@ public class AddDeviceDialog extends HestiaDialog {
                 try {
                     info = serverCollectionsInteractor.getRequiredInfo(collection, pluginName);
                 } catch (IOException e) {
-                    Log.e(TAG,e.toString());
+                    Log.e(TAG, e.toString());
                     String exceptionMessage = "Could not connect to the server";
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
@@ -103,10 +102,13 @@ public class AddDeviceDialog extends HestiaDialog {
 
             @Override
             protected void onPostExecute(RequiredInfo info) {
-                if(info != null){
+                if (info != null) {
                     EnterRequiredInfoDialog fragment = EnterRequiredInfoDialog.newInstance();
                     fragment.setData(info, serverCollectionsInteractor);
-                    if(fragmentManager == null){
+                    if (fragmentManager == null) {
+                        Log.d(TAG, "FragmentManager is null");
+                        Toast.makeText(getContext(), "Error sending data, try again", Toast.LENGTH_SHORT).show();
+                        return;
                     }
                     fragment.show(fragmentManager, "dialog");
                 }
@@ -143,7 +145,7 @@ public class AddDeviceDialog extends HestiaDialog {
                 try {
                     collections = serverCollectionsInteractor.getCollections();
                 } catch (IOException e) {
-                    Log.e(TAG,e.toString());
+                    Log.e(TAG, e.toString());
                     String exceptionMessage = "Could not connect to the server";
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
@@ -158,7 +160,9 @@ public class AddDeviceDialog extends HestiaDialog {
 
             @Override
             protected void onProgressUpdate(String... exceptionMessage) {
-                Toast.makeText(getContext(), exceptionMessage[0], Toast.LENGTH_SHORT).show();
+                if(getContext() != null) {
+                    Toast.makeText(getContext(), exceptionMessage[0], Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -179,7 +183,7 @@ public class AddDeviceDialog extends HestiaDialog {
                 try {
                     plugins = serverCollectionsInteractor.getPlugins(collection);
                 } catch (IOException e) {
-                    Log.e(TAG,e.toString());
+                    Log.e(TAG, e.toString());
                     String exceptionMessage = "Could not connect to the server";
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
@@ -194,13 +198,15 @@ public class AddDeviceDialog extends HestiaDialog {
 
             @Override
             protected void onProgressUpdate(String... exceptionMessage) {
-                Toast.makeText(getContext(), exceptionMessage[0], Toast.LENGTH_SHORT).show();
+                if(getContext() != null) {
+                    Toast.makeText(getContext(), exceptionMessage[0], Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
             protected void onPostExecute(ArrayList<String> plugins) {
                 adapterPlugins.clear();
-                if(plugins != null) {
+                if (plugins != null) {
                     adapterPlugins.addAll(plugins);
                 }
             }
