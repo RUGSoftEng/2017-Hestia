@@ -4,10 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import hestia.backend.exceptions.ComFaultException;
+
 import hestia.backend.NetworkHandler;
+import hestia.backend.exceptions.ComFaultException;
 
 /**
  * Represents the internal representation of the device class on the client. The device contains an

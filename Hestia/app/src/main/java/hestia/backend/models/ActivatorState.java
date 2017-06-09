@@ -1,6 +1,7 @@
 package hestia.backend.models;
 
 import com.google.gson.JsonPrimitive;
+
 import hestia.backend.models.deserializers.ActivatorDeserializer;
 
 /**

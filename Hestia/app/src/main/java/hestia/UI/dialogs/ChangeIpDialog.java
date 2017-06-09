@@ -1,16 +1,12 @@
 package hestia.UI.dialogs;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.rugged.application.hestia.R;
 
 import hestia.backend.ServerCollectionsInteractor;
@@ -19,7 +15,6 @@ import hestia.backend.ServerCollectionsInteractor;
  * This class represents the dialog screen with which the IP-address of the server is asked from the
  * user.
  */
-
 public class ChangeIpDialog extends HestiaDialog {
     private final static String TAG = "ChangeIpDialog";
     private String ip;
@@ -59,21 +54,29 @@ public class ChangeIpDialog extends HestiaDialog {
         return view;
     }
 
+    /**
+     * After pressing confirm the entered ip is checked and, if it is a valid address,
+     * sent to the handler. A text message is displayed to the user showing the new IP-address.
+     */
     @Override
     void pressConfirm() {
         ip = ipField.getText().toString();
-        Log.i(TAG, "My ip is now:" + ip);
+        Log.i(TAG, "My ip before changing is:" + ip);
         if(ip!=null) {
             serverCollectionsInteractor.getHandler().setIp(ip);
-            Log.i(TAG, "My ip is changed to: " + ip);
+            Log.i(TAG, "My ip was changed to: " + ip);
             Toast.makeText(getContext(), serverCollectionsInteractor.getHandler()
                             .getIp(),
                     Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * Pressing cancel on the dialog simply displays a text message.
+     */
     @Override
     void pressCancel() {
-        Toast.makeText(getContext(), "Cancel pressed", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getResources().getText(R.string.cancelIPChange),
+                Toast.LENGTH_SHORT).show();
     }
 }

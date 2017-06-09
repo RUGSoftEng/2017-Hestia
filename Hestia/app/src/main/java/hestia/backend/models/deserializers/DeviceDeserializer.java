@@ -1,6 +1,7 @@
 package hestia.backend.models.deserializers;
 
 import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -10,8 +11,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
 import hestia.backend.NetworkHandler;
 import hestia.backend.models.Activator;
 import hestia.backend.models.Device;

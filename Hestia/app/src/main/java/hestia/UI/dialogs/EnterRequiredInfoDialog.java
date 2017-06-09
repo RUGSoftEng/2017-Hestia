@@ -1,18 +1,15 @@
 package hestia.UI.dialogs;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -45,6 +42,14 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
         return fragment;
     }
 
+    /**
+     * This setter is used to set the information for the dialog after the
+     * AddDeviceDialog has created it.
+     * @param info The requiredInfo which was obtained from the server by the AddDeviceDialog
+     * @param serverCollectionsInteractor The object used for interacting with the server
+     *
+     * @see AddDeviceDialog
+     */
     public void setData(RequiredInfo info, ServerCollectionsInteractor serverCollectionsInteractor) {
         this.info = info;
         this.serverCollectionsInteractor = serverCollectionsInteractor;

@@ -11,28 +11,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import com.rugged.application.hestia.R;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
 import com.yalantis.contextmenu.lib.MenuObject;
 import com.yalantis.contextmenu.lib.MenuParams;
 import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.net.ssl.SSLSocketFactory;
 
 import hestia.UI.activities.login.LoginActivity;
 import hestia.UI.dialogs.ChangeCredentialsDialog;
 import hestia.UI.dialogs.ChangeIpDialog;
-import hestia.backend.ServerCollectionsInteractor;
 import hestia.backend.NetworkHandler;
+import hestia.backend.ServerCollectionsInteractor;
 
 public  class HomeActivity extends AppCompatActivity implements OnMenuItemClickListener {
     private ContextMenuDialogFragment mMenuDialogFragment;
@@ -58,7 +51,7 @@ public  class HomeActivity extends AppCompatActivity implements OnMenuItemClickL
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
 
         if (fragment == null) {
-            fragment = new DeviceListFragment(this.getApplicationContext(), this.serverCollectionsInteractor);
+            fragment = DeviceListFragment.newInstance(this.serverCollectionsInteractor);
             fragmentManager.beginTransaction().add(R.id.fragment_container, fragment).commit();
         }
         menuObjects = getMenuObjects();

@@ -49,4 +49,7 @@
     <string name="passSet">Password set to: </string>
     <string name="userSet">Username set to: </string>
     <string name="userNotSet">Username not changed (length under 5)</string>
+    <string name="cancelNameChange">Name of the device was not changed</string>
+    <string name="titleNameChange">Change name</string>
+    <string name="cancelIPChange">\"Cancel pressed\"</string>
 </resources>

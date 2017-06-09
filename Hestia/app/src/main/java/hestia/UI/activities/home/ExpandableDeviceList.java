@@ -7,10 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+
+import com.rugged.application.hestia.R;
+
+import java.util.ArrayList;
+
 import hestia.UI.elements.DeviceBar;
 import hestia.backend.ServerCollectionsInteractor;
-import com.rugged.application.hestia.R;
-import java.util.ArrayList;
 
 /**
  * The ExpandableDeviceList creates the expendable list. It receives an Arraylist with deviceBars
@@ -98,5 +101,9 @@ public class ExpandableDeviceList extends BaseExpandableListAdapter{
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
+    }
+
+    public void setServerCollectionsInteractor(ServerCollectionsInteractor serverCollectionsInteractor) {
+        this.serverCollectionsInteractor = serverCollectionsInteractor;
     }
 }
