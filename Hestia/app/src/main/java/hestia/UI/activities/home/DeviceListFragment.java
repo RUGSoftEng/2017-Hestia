@@ -81,7 +81,7 @@ public class DeviceListFragment extends Fragment {
                     devices = serverCollectionsInteractor.getDevices();
                 } catch (IOException e) {
                     Log.e(TAG, e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    String exceptionMessage = context.getString(R.string.ioExceptionMessage);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());

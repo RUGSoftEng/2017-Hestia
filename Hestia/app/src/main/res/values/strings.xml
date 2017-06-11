@@ -49,6 +49,18 @@
     <string name="passSet">Password set to: </string>
     <string name="userSet">Username set to: </string>
     <string name="userNotSet">Username not changed (length under 5)</string>
+    <string name="deviceEndpoint">devices/</string>
+    <string name="activatorEndpoint">/activators/</string>
+    <string name="pluginEndpoint">plugins/</string>
+    <string name="loginEndpoint">login/</string>
+    <string name="ioExceptionMessage">Could not connect to the server</string>
+    <string name="enterIpHint">Enter ip here</string>
+    <string name="credentialsCorrectlyChanged">Credentials successfully changed</string>
+    <string name="addDeviceTitle">Add device</string>
+    <string name="changeCredentialsTile">Change credentials</string>
+    <string name="changeIpTitle">Change IP</string>
+    <string name="changeNameTitle">Change name</string>
+    <string name="cancelPressed">cancel pressed</string>
     <string name="hashCodeMultiplier">31</string>
     <string name="toggleRank">0</string>
 </resources>

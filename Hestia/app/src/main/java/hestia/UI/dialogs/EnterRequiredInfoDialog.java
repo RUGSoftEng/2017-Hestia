@@ -143,7 +143,7 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
                     serverCollectionsInteractor.addDevice(info);
                 } catch (IOException e) {
                     Log.e(TAG,e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    String exceptionMessage = getContext().getString(R.string.ioExceptionMessage);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());

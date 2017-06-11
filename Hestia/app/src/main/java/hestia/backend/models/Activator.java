@@ -56,7 +56,8 @@ public class Activator {
     }
 
     public void setState(ActivatorState state) throws IOException, ComFaultException {
-        String path = "devices/"+device.getId()+"/activators/"+activatorId;
+        String path = HestiaApplication.getContext().getString(R.string.deviceEndpoint)+device.getId()
+                     +HestiaApplication.getContext().getString(R.string.activatorEndpoint)+activatorId;
         JsonObject send = new JsonObject();
         send.add("state", state.getRawStateJSON());
         JsonElement payload = handler.POST(send, path);

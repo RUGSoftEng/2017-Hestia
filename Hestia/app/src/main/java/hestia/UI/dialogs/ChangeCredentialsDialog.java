@@ -28,7 +28,7 @@ public class ChangeCredentialsDialog extends HestiaDialog {
 
     @Override
     String buildTitle() {
-        return "Change credentials";
+        return getContext().getString(R.string.changeCredentialsTile);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ChangeCredentialsDialog extends HestiaDialog {
 
     @Override
     void pressCancel() {
-        showToast("Credentials successfully changed");
+        showToast(getContext().getString(R.string.credentialsCorrectlyChanged));
     }
 
     private boolean checkOldPass(String oldPass){

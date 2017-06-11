@@ -50,7 +50,7 @@ public class AddDeviceDialog extends HestiaDialog {
 
     @Override
     String buildTitle() {
-        return "new Add device";
+        return getContext().getString(R.string.addDeviceTitle);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class AddDeviceDialog extends HestiaDialog {
                     info = serverCollectionsInteractor.getRequiredInfo(collection, pluginName);
                 } catch (IOException e) {
                     Log.e(TAG,e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    String exceptionMessage = getContext().getString(R.string.ioExceptionMessage);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());
@@ -144,7 +144,7 @@ public class AddDeviceDialog extends HestiaDialog {
                     collections = serverCollectionsInteractor.getCollections();
                 } catch (IOException e) {
                     Log.e(TAG,e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    String exceptionMessage = getContext().getString(R.string.ioExceptionMessage);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());
@@ -180,7 +180,7 @@ public class AddDeviceDialog extends HestiaDialog {
                     plugins = serverCollectionsInteractor.getPlugins(collection);
                 } catch (IOException e) {
                     Log.e(TAG,e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    String exceptionMessage = getContext().getString(R.string.ioExceptionMessage);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());
