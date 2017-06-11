@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import hestia.UI.activities.home.HomeActivity;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -32,6 +33,10 @@ abstract class HestiaDialog extends DialogFragment {
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         return dialog;
+    }
+
+    protected void refreshUserInterface(){
+        ((HomeActivity)this.getActivity()).refreshUserInterface();
     }
 
     abstract String buildTitle();
