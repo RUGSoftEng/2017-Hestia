@@ -12,15 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.rugged.application.hestia.R;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import hestia.UI.activities.home.HomeActivity;
-import hestia.backend.NetworkHandler;
-import hestia.backend.ServerCollectionsInteractor;
-import hestia.backend.exceptions.ComFaultException;
 
 /**
  *  This class handles the login activity.
@@ -60,7 +56,10 @@ public class LoginActivity extends Activity  {
                 clearSaveLogin();
             }
         }
+        addWidgets();
+    }
 
+    private void addWidgets() {
         loginButton = (Button)findViewById(R.id.loginButton);
         userField = (EditText)findViewById(R.id.username);
         passField = (EditText)findViewById(R.id.password);

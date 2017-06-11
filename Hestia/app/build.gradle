@@ -47,3 +47,42 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.10.19'
     androidTestCompile 'org.mockito:mockito-android:2.7.22'
 }
+
+task jacocoHestiaTestReport(type:JacocoReport, dependsOn: "connectedDebugAndroidTest") {
+
+    group = "Reporting"
+
+    description = "Generate Jacoco coverage reports"
+
+    // exclude auto-generated classes and tests
+    def fileFilter = ['**/R.class',
+                      '**/R$*.class',
+                      '**/BuildConfig.*',
+                      '**/Manifest*.*',
+                      '**/*IScript*.*',
+                      'android/**/*.*',
+                      '**/*_Factory*',
+                      '**/*_MembersInjector*',
+                      '**/*Fake*',
+                      '**/UI/**']
+
+    def debugTree = fileTree(dir:
+            "${project.buildDir}/intermediates/classes/debug",
+            excludes: fileFilter)
+
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+
+    executionData = fileTree(dir: project.projectDir, includes:
+            ['**/*.exec', '**/*.ec'])
+
+    reports {
+        xml.enabled = true
+        xml.destination = "${buildDir}/jacocoTestReport.xml"
+        csv.enabled = false
+        html.enabled = true
+        html.destination = "${buildDir}/reports/jacoco"
+    }
+}

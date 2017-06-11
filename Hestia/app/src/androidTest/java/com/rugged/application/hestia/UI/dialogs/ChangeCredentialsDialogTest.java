@@ -36,8 +36,9 @@ public class ChangeCredentialsDialogTest extends UiTest {
     @Rule
     public IntentsTestRule<HomeActivity> mIntentsRule =
             new IntentsTestRule<>(HomeActivity.class);
+
     @Before
-    public void setUp(){
+    public void setUp() {
         // To be sure that the correct standard credentials are set, logout and login.
         onView(withId(context_menu)).perform(click());
         onView(withText(getStr(R.string.logout))).perform(click());
@@ -47,29 +48,42 @@ public class ChangeCredentialsDialogTest extends UiTest {
     }
 
     @Test
-    public void changeUserPassTest(){
-        setCredentials(NEW_USER,getStr(R.string.standardPass),NEW_PASS,NEW_PASS);
-        logoutLogin(NEW_USER,NEW_PASS);
+    public void changeUserPassTest() {
+        try {
+            setCredentials(NEW_USER, getStr(R.string.standardPass), NEW_PASS, NEW_PASS);
+            Thread.sleep(1000);
+            logoutLogin(NEW_USER, NEW_PASS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @After
-    public void resetCredentials(){
-        setCredentials(getStr(R.string.standardUser),NEW_PASS,getStr(R.string.standardPass)
-                ,getStr(R.string.standardPass));
+    public void resetCredentials() {
+        try {
+            setCredentials(getStr(R.string.standardUser), NEW_PASS, getStr(R.string.standardPass)
+                    , getStr(R.string.standardPass));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void setCredentials(String user, String pass, String nnpass, String npass){
+    public void setCredentials(String user, String pass, String nnpass, String npass) throws InterruptedException {
+        Thread.sleep(1000);
         onView(withId(context_menu)).perform(click());
+        Thread.sleep(1000);
         onView(withText(getStr(R.string.changeUserPass))).perform(click());
-        onView(withId(R.id.newUser)).perform(clearText(),typeText(user), closeSoftKeyboard());
-        onView(withId(R.id.oldPass)).perform(clearText(),typeText(pass), closeSoftKeyboard());
-        onView(withId(R.id.newPass)).perform(clearText(),typeText(npass), closeSoftKeyboard());
-        onView(withId(R.id.newPassCheck)).perform(clearText(),typeText(nnpass), closeSoftKeyboard());
+        onView(withId(R.id.newUser)).perform(clearText(), typeText(user), closeSoftKeyboard());
+        onView(withId(R.id.oldPass)).perform(clearText(), typeText(pass), closeSoftKeyboard());
+        onView(withId(R.id.newPass)).perform(clearText(), typeText(npass), closeSoftKeyboard());
+        onView(withId(R.id.newPassCheck)).perform(clearText(), typeText(nnpass), closeSoftKeyboard());
         onView(withText("Confirm")).perform(click());
     }
 
-    public void logoutLogin(String user, String pass){
+    public void logoutLogin(String user, String pass) throws InterruptedException {
+        Thread.sleep(1000);
         onView(withId(context_menu)).perform(click());
+        Thread.sleep(1000);
         onView(withText(getStr(R.string.logout))).perform(click());
         onView(withId(R.id.username)).perform(typeText(user), closeSoftKeyboard());
         onView(withId(R.id.password)).perform(typeText(pass), closeSoftKeyboard());

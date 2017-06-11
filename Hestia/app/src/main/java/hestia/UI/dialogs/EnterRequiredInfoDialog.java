@@ -1,18 +1,15 @@
 package hestia.UI.dialogs;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -58,19 +55,13 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
     @Override
     View buildView() {
         int count = 0;
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
 
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         view = inflater.inflate(R.layout.enter_device_info, null);
 
         final LinearLayout mainLayout = (LinearLayout) view.findViewById(R.id.linearMain);
-        mainLayout.setLayoutParams(params);
-        float scale = getResources().getDisplayMetrics().density;
-        int padding = 8;
-        int dpAsPixels = (int) (padding*scale + 0.5f);
-        mainLayout.setOrientation(LinearLayout.VERTICAL);
-        mainLayout.setPadding(0, dpAsPixels, 0, 0);
+        setLayoutProperties(mainLayout);
 
         final HashMap<String, String> fields = info.getInfo();
 
@@ -89,6 +80,17 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
         }
 
         return view;
+    }
+
+    private void setLayoutProperties(LinearLayout layout) {
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layout.setLayoutParams(params);
+        float scale = getResources().getDisplayMetrics().density;
+        int padding = 8;
+        int dpAsPixels = (int) (padding*scale + 0.5f);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(0, dpAsPixels, 0, 0);
     }
 
     private EditText createEditText(final String key, LinearLayout.LayoutParams params, int count,
@@ -124,13 +126,11 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
         }
         field.setLayoutParams(params);
 
-
         return field;
     }
 
     @Override
     void pressCancel() {
-        Toast.makeText(getActivity(), R.string.cancel, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
                     serverCollectionsInteractor.addDevice(info);
                 } catch (IOException e) {
                     Log.e(TAG,e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    String exceptionMessage = getString(R.string.serverNotFound);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());
@@ -177,5 +177,4 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
             count++;
         }
     }
-
 }

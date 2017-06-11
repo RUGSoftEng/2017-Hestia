@@ -1,21 +1,20 @@
 package hestia.UI.dialogs;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
+
 import com.rugged.application.hestia.R;
+
 import java.io.IOException;
 import java.util.ArrayList;
+
+import hestia.UI.HestiaApplication;
 import hestia.backend.ServerCollectionsInteractor;
 import hestia.backend.exceptions.ComFaultException;
 import hestia.backend.models.RequiredInfo;
@@ -50,7 +49,7 @@ public class AddDeviceDialog extends HestiaDialog {
 
     @Override
     String buildTitle() {
-        return "new Add device";
+        return getString(R.string.addDeviceTitle);
     }
 
     @Override
@@ -68,7 +67,6 @@ public class AddDeviceDialog extends HestiaDialog {
 
     @Override
     void pressCancel() {
-        dismiss();
     }
 
     @Override
@@ -84,7 +82,7 @@ public class AddDeviceDialog extends HestiaDialog {
                     info = serverCollectionsInteractor.getRequiredInfo(collection, pluginName);
                 } catch (IOException e) {
                     Log.e(TAG,e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    String exceptionMessage = getString(R.string.serverNotFound);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());
@@ -144,7 +142,7 @@ public class AddDeviceDialog extends HestiaDialog {
                     collections = serverCollectionsInteractor.getCollections();
                 } catch (IOException e) {
                     Log.e(TAG,e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    String exceptionMessage = getString(R.string.serverNotFound);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());
@@ -158,7 +156,7 @@ public class AddDeviceDialog extends HestiaDialog {
 
             @Override
             protected void onProgressUpdate(String... exceptionMessage) {
-                Toast.makeText(getContext(), exceptionMessage[0], Toast.LENGTH_SHORT).show();
+                Toast.makeText(HestiaApplication.getContext(), exceptionMessage[0], Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -180,7 +178,7 @@ public class AddDeviceDialog extends HestiaDialog {
                     plugins = serverCollectionsInteractor.getPlugins(collection);
                 } catch (IOException e) {
                     Log.e(TAG,e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    String exceptionMessage = getString(R.string.serverNotFound);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());
@@ -194,7 +192,7 @@ public class AddDeviceDialog extends HestiaDialog {
 
             @Override
             protected void onProgressUpdate(String... exceptionMessage) {
-                Toast.makeText(getContext(), exceptionMessage[0], Toast.LENGTH_SHORT).show();
+                Toast.makeText(HestiaApplication.getContext(), exceptionMessage[0], Toast.LENGTH_SHORT).show();
             }
 
             @Override

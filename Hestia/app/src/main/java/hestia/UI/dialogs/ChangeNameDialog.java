@@ -1,18 +1,16 @@
 package hestia.UI.dialogs;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.rugged.application.hestia.R;
+
 import java.io.IOException;
+
 import hestia.backend.exceptions.ComFaultException;
 import hestia.backend.models.Device;
 
@@ -32,7 +30,7 @@ public class ChangeNameDialog extends HestiaDialog {
 
     @Override
     String buildTitle() {
-        return "Change name";
+        return getString(R.string.changeNameTitle);
     }
 
     @Override
@@ -61,7 +59,7 @@ public class ChangeNameDialog extends HestiaDialog {
                     isSuccessful = true;
                 } catch (IOException e) {
                     Log.e(TAG,e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    String exceptionMessage = getString(R.string.serverNotFound);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());

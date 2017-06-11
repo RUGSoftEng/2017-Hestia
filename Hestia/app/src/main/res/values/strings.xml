@@ -1,22 +1,15 @@
 <resources>
     <string name="app_name">Hestia</string>
-    <string name="offText">Off</string>
-    <string name="onText">On</string>
     <string name="loginText">Login</string>
     <string name="passHint">Password</string>
     <string name="userHint">Username</string>
     <string name="rememberMeText">Remember me:</string>
     <string name="attemptsLeftText">Attempts Left:</string>
-    <string name="ipDialogText">Server IP</string>
-    <string name="ipHint">IP address (E.G.: 192.168.1.0)</string>
-    <string name="portHint">Port (E.G.: 5000, *can be left empty!*)</string>
-    <string name="back">Back</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="addDeviceText">Add a new device</string>
     <string name="collectionHint">Collection</string>
     <string name="pluginHint">Plugin</string>
-    <string name="bridgeHint">Bridge (e.g. 192.168.1.0)</string>
     <string name="emptyValuesEntered">One or more empty values were entered.</string>
     <string name="ipSetTo">Ip address set to : </string>
     <string name="default_ip">80.114.179.5</string>
@@ -25,6 +18,8 @@
     <string name="newPassHint">New password</string>
     <string name="newPassCheckHint">New password again</string>
     <string name="newUserHint">New username</string>
+    <string name="incorr_ip">"The IP address should be between 0.0.0.0 and 255.255.255.255"</string>
+    <!-- Login activity -->
     <string name="loginPrefs">LoginPreferences</string>
     <string name="loginPrefsUser">username</string>
     <string name="loginPrefsPass">password</string>
@@ -34,21 +29,36 @@
     <string name="incorrectLoginToast">Invalid credentials.</string>
     <string name="loginIntentExtra">login</string>
     <string name="saveLogin">savelogin</string>
+
     <string name="hestiaIp">HESTIA.IP</string>
     <string name="ipOfServer">IP_OF_SERVER</string>
+    <!-- Menu items text-->
     <string name="setIp">Set IP</string>
     <string name="logout">Logout</string>
     <string name="changeUserPass">Change user/pass</string>
+
     <string name="login">login</string>
     <string name="logoutExtraValue">logout</string>
     <string name="mystore_password">some-password</string>
+
     <string name="fixedFieldCol">collection</string>
     <string name="fixedFieldPlugin">plugin</string>
+
     <string name="passOldWrong">Old password is incorrect </string>
     <string name="passCheckWrong">New password not set </string>
     <string name="passSet">Password set to: </string>
     <string name="userSet">Username set to: </string>
     <string name="userNotSet">Username not changed (length under 5)</string>
+    <string name="setIpHint">Enter ip here</string>
+
+    <!-- Dialog build titles -->
+    <string name="addDeviceTitle">new Add device</string>
+    <string name="changeCredsTitle">Change credentials</string>
+    <string name="changeIpTitle">Change IP</string>
+    <string name="changeNameTitle">Change name</string>
+
+    <string name="serverNotFound">Could not connect to the server</string>
+
     <string name="hashCodeMultiplier">31</string>
     <string name="toggleRank">0</string>
 </resources>

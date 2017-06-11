@@ -18,6 +18,7 @@ import com.rugged.application.hestia.R;
 
 import java.io.IOException;
 
+import hestia.UI.HestiaApplication;
 import hestia.UI.dialogs.ChangeNameDialog;
 import hestia.UI.dialogs.SlidersDialog;
 import hestia.backend.ServerCollectionsInteractor;
@@ -95,6 +96,7 @@ public class DeviceBar extends RelativeLayout {
                 PopupMenu popup = createPopupMenu(view);
 
                 popup.show();
+
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
@@ -120,6 +122,24 @@ public class DeviceBar extends RelativeLayout {
     private PopupMenu createPopupMenu(View view){
         PopupMenu popup = new PopupMenu(getContext(), view);
         popup.getMenuInflater().inflate(R.menu.popup, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.delete:
+                        doDeleteRequest();
+                        break;
+                    case R.id.change_name:
+                        ChangeNameDialog fragment = ChangeNameDialog.newInstance();
+                        fragment.setDevice(device);
+                        fragment.show(fm, "dialog");
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
         return popup;
    }
 
@@ -150,7 +170,8 @@ public class DeviceBar extends RelativeLayout {
                     isSuccessful = true;
                 } catch (IOException e) {
                     Log.e(TAG,e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    String exceptionMessage = HestiaApplication.getContext().
+                            getString(R.string.serverNotFound);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());

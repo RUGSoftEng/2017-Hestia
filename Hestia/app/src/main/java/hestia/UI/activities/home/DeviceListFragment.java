@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,14 +14,17 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
-import hestia.UI.elements.DeviceBar;
+
+import com.rugged.application.hestia.R;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
 import hestia.UI.dialogs.AddDeviceDialog;
+import hestia.UI.elements.DeviceBar;
 import hestia.backend.ServerCollectionsInteractor;
 import hestia.backend.exceptions.ComFaultException;
 import hestia.backend.models.Device;
-import com.rugged.application.hestia.R;
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * This fragment takes care of generating the list of peripherals on the phone. It sends an HTTP
@@ -38,19 +40,20 @@ public class DeviceListFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
     private final static String TAG = "DeviceListFragment";
     private Activity surroundingActivity;
-    private FragmentManager fm;
 
     public DeviceListFragment() {
         super();
     }
 
-    public DeviceListFragment(Context context, ServerCollectionsInteractor serverCollectionsInteractor) {
-        super();
-        this.context = context;
-        this.serverCollectionsInteractor = serverCollectionsInteractor;
-//        fm = getActivity().getSupportFragmentManager();
+    public static DeviceListFragment newInstance() {
+        DeviceListFragment fragment = new DeviceListFragment();
+        return fragment;
     }
 
+    public void setServerCollectionsInteractor(ServerCollectionsInteractor
+                                                       serverCollectionsInteractor) {
+        this.serverCollectionsInteractor = serverCollectionsInteractor;
+    }
 
     /**
      *
@@ -62,6 +65,7 @@ public class DeviceListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        this.context = getContext();
         View deviceListView = inflater.inflate(R.layout.fragment_device_list, container, false);
 
         createFloatingButton(deviceListView);
@@ -81,7 +85,7 @@ public class DeviceListFragment extends Fragment {
                     devices = serverCollectionsInteractor.getDevices();
                 } catch (IOException e) {
                     Log.e(TAG, e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    String exceptionMessage = getString(R.string.serverNotFound);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());
@@ -103,7 +107,8 @@ public class DeviceListFragment extends Fragment {
                 listDataChild = new ArrayList<>();
                 for (Device device : devices) {
                     Log.i(TAG, "device found");
-                    DeviceBar bar = new DeviceBar(getActivity().getSupportFragmentManager(), getActivity(), device, serverCollectionsInteractor);
+                    DeviceBar bar = new DeviceBar(getActivity().getSupportFragmentManager(),
+                            getActivity(), device, serverCollectionsInteractor);
                     if(!listDataChild.contains(bar)) {
                         if (!typeExists(device)) {
                             listDataChild.add(new ArrayList<DeviceBar>());
@@ -138,7 +143,7 @@ public class DeviceListFragment extends Fragment {
     private void initDeviceList(View deviceListView) {
         listDataChild = new ArrayList<>();
         expListView = (ExpandableListView) deviceListView.findViewById(R.id.lvExp);
-        listAdapter = new ExpandableDeviceList(listDataChild, surroundingActivity, this.serverCollectionsInteractor);
+        listAdapter = new ExpandableDeviceList(listDataChild, surroundingActivity);
         expListView.setAdapter(listAdapter);
         setOnScrollListeners();
     }

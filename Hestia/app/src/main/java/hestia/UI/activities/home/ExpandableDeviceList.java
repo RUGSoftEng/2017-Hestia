@@ -19,15 +19,12 @@ import java.util.ArrayList;
  */
 
 public class ExpandableDeviceList extends BaseExpandableListAdapter{
-    private ServerCollectionsInteractor serverCollectionsInteractor;
     private ArrayList<ArrayList<DeviceBar>> listDataChild;
     private Context context;
 
-    public ExpandableDeviceList(ArrayList<ArrayList<DeviceBar>> listChildData, Context context, ServerCollectionsInteractor serverCollectionsInteractor) {
+    public ExpandableDeviceList(ArrayList<ArrayList<DeviceBar>> listChildData, Context context) {
         this.listDataChild = listChildData;
         this.context = context;
-        this.serverCollectionsInteractor = serverCollectionsInteractor;
-
     }
 
     @Override

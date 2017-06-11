@@ -1,6 +1,5 @@
 package com.rugged.application.hestia.UI.activities.login;
 
-import android.content.res.Resources;
 import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -47,11 +46,10 @@ public class LoginTest extends UiTest {
 
     @Test
     public void checkLogin() {
-        // Login with 'remember me'
-        onView(ViewMatchers.withId(R.id.username)).
-                perform(typeText(getStr(R.string.standardUser)), closeSoftKeyboard());
-        onView(withId(R.id.password)).
-                perform(typeText(getStr(R.string.standardPass)), closeSoftKeyboard());
+        onView(ViewMatchers.withId(R.id.username))
+                .perform(typeText(getStr(R.string.standardUser)), closeSoftKeyboard());
+        onView(withId(R.id.password))
+                .perform(typeText(getStr(R.string.standardPass)), closeSoftKeyboard());
         onView(withId(R.id.rememberButton)).perform(click());
         onView(withId(R.id.loginButton)).perform(click());
         intended(allOf(

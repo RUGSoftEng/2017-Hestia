@@ -23,9 +23,7 @@ android:
     - addon-google_apis-google-19
 
     #System images
-    - sys-img-armeabi-v7a-android-22
-    - sys-img-armeabi-v7a-android-17
-
+    - sys-img-armeabi-v7a-android-16
 before_install:
   # copy the licenses to the correct file on the Travis system
     - pip install --user codecov    #Install codecov
@@ -44,8 +42,7 @@ before_script:
     - adb shell input keyevent 82 &
 
 script:
-    - bash gradlew app:connectedCheck
-    - bash gradlew app:createDebugCoverageReport
+    - bash gradlew app:jacocoHestiaTestReport
 
 after_failure:
   # Prints any linting errors after failing
