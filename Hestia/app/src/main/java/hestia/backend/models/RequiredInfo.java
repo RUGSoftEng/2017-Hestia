@@ -14,7 +14,7 @@ public class RequiredInfo {
     private String plugin;
     private HashMap<String, String> info;
 
-    public RequiredInfo(String collection, String plugin, HashMap<String, String> info){
+    public RequiredInfo(String collection, String plugin, HashMap<String, String> info) {
         this.collection = collection;
         this.plugin = plugin;
         this.info = info;

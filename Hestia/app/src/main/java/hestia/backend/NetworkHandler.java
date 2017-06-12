@@ -37,7 +37,7 @@ import hestia.UI.HestiaApplication;
  * as well as getters and setters for the ip and the port number.
  */
 
-public class NetworkHandler extends Application implements Serializable{
+public class NetworkHandler extends Application implements Serializable {
     private final String TAG = "NetworkHandler";
     private String ip;
     private Integer port;
@@ -80,7 +80,7 @@ public class NetworkHandler extends Application implements Serializable{
      * and the path.
      *
      * @param requestMethod the type of request that will be sent to the server.
-     * @param endpoint path to the server's endpoint.
+     * @param endpoint      path to the server's endpoint.
      * @return the object responsible for setting up the connection to the server.
      * @throws IOException
      */
@@ -100,7 +100,7 @@ public class NetworkHandler extends Application implements Serializable{
      * This method sends the JsonObject object to the server.
      *
      * @param connector the object responsible for setting up the connection to the server.
-     * @param object the JsonObject that will be sent to the server.
+     * @param object    the JsonObject that will be sent to the server.
      * @throws IOException IOException
      */
     private void sendToServer(HttpsURLConnection connector, JsonObject object) throws IOException {
@@ -181,6 +181,7 @@ public class NetworkHandler extends Application implements Serializable{
                     public java.security.cert.X509Certificate[] getAcceptedIssuers() {
                         return new X509Certificate[0];
                     }
+
                     public void checkClientTrusted(
                             java.security.cert.X509Certificate[] certs, String authType) {
                     }
@@ -199,17 +200,17 @@ public class NetworkHandler extends Application implements Serializable{
             sc = SSLContext.getInstance("SSL");
             sc.init(null, trustingCert, new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (GeneralSecurityException e){
+        } catch (GeneralSecurityException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public boolean equals(Object object) {
-        if(!(object instanceof NetworkHandler)) return false;
+        if (!(object instanceof NetworkHandler)) return false;
         NetworkHandler networkHandler = (NetworkHandler) object;
         return (this == networkHandler || (this.getPort().equals(networkHandler.getPort()) &&
-                                           this.getIp().equals(networkHandler.getIp())));
+                this.getIp().equals(networkHandler.getIp())));
     }
 
     @Override

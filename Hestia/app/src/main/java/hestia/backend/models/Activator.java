@@ -16,6 +16,7 @@ import hestia.backend.exceptions.ComFaultException;
  * a rank so that they can be ordered properly, based on their rank.
  * Furthermore there is a string name and a field state of the type ActivatorState,
  * which reflects the current state of the activator
+ *
  * @see Device
  * @see ActivatorState
  * @see NetworkHandler
@@ -56,14 +57,14 @@ public class Activator {
     }
 
     public void setState(ActivatorState state) throws IOException, ComFaultException {
-        String path = "devices/"+device.getId()+"/activators/"+activatorId;
+        String path = "devices/" + device.getId() + "/activators/" + activatorId;
         JsonObject send = new JsonObject();
         send.add("state", state.getRawStateJSON());
         JsonElement payload = handler.POST(send, path);
 
-        if(payload != null && payload.isJsonObject()) {
+        if (payload != null && payload.isJsonObject()) {
             JsonObject result = payload.getAsJsonObject();
-            if(result.has("error")) {
+            if (result.has("error")) {
                 String error = result.get("error").getAsString();
                 throw new ComFaultException(error);
             }
@@ -98,13 +99,13 @@ public class Activator {
 
     @Override
     public boolean equals(Object object) {
-        if(!(object instanceof Activator)) return false;
+        if (!(object instanceof Activator)) return false;
         Activator activator = (Activator) object;
         return (this == activator || (this.getId().equals(activator.getId()) &&
-                                      this.getRank().equals(activator.getRank()) &&
-                                      this.getState().equals(activator.getState()) &&
-                                      this.getName().equals(activator.getName()) &&
-                                      this.getHandler().equals(activator.getHandler())));
+                this.getRank().equals(activator.getRank()) &&
+                this.getState().equals(activator.getState()) &&
+                this.getName().equals(activator.getName()) &&
+                this.getHandler().equals(activator.getHandler())));
     }
 
     @Override

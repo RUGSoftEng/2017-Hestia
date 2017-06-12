@@ -23,6 +23,7 @@ import hestia.backend.models.Device;
  * A JSON deserializer for the Device class.
  * It implements Google's JsonDeserializer interface, and it is used by GSON to deserialize the
  * devices from the list of devices, as well as their activators.
+ *
  * @see Device
  * @see ActivatorDeserializer
  */
@@ -36,7 +37,8 @@ public class DeviceDeserializer implements JsonDeserializer<Device> {
 
     /**
      * Deserializes a JSON object, creating a Device.
-     * @param json the JSON object to be deserialized
+     *
+     * @param json    the JSON object to be deserialized
      * @param typeOfT the type of the Object to deserialize to
      * @param context the current context of application
      * @return a deserialized object of the specified type Device
@@ -47,10 +49,10 @@ public class DeviceDeserializer implements JsonDeserializer<Device> {
             throws JsonParseException {
 
         JsonObject jsonDevices = json.getAsJsonObject();
-        Log.i("JSONOBJECT - DEVICES",jsonDevices.toString());
+        Log.i("JSONOBJECT - DEVICES", jsonDevices.toString());
 
         String deviceId = jsonDevices.get("deviceId").getAsString();
-        String  type = jsonDevices.get("type").getAsString();
+        String type = jsonDevices.get("type").getAsString();
         String name = jsonDevices.get("name").getAsString();
 
         JsonArray jsonActivators = jsonDevices.get("activators").getAsJsonArray();
@@ -59,7 +61,8 @@ public class DeviceDeserializer implements JsonDeserializer<Device> {
         gsonBuilder.registerTypeAdapter(Activator.class, new ActivatorDeserializer());
         Gson gson = gsonBuilder.create();
 
-        Type typeToken = new TypeToken<ArrayList<Activator>>(){}.getType();
+        Type typeToken = new TypeToken<ArrayList<Activator>>() {
+        }.getType();
         ArrayList<Activator> activators = gson.fromJson(jsonActivators, typeToken);
 
         Device device = new Device(deviceId, name, type, activators, handler);
@@ -69,7 +72,7 @@ public class DeviceDeserializer implements JsonDeserializer<Device> {
     }
 
     private void connectDeviceToActivators(ArrayList<Activator> activators, Device device) {
-        for(Activator activator : activators) {
+        for (Activator activator : activators) {
             activator.setDevice(device);
         }
     }

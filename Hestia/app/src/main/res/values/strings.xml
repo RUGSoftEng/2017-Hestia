@@ -15,7 +15,8 @@
     <string name="collectionHint">Collection</string>
     <string name="pluginHint">Plugin</string>
     <string name="ipHint">IP (e.g. 127.0.0.1)</string>
-    <string name="default_port">8000</string>
+    <string name="defaultPort">8000</string>
+    <string name="errorDataSend">Error sending data, try again</string>
 
     <!--Login-->
     <string name="loginText">Login</string>
@@ -31,7 +32,7 @@
     <string name="correctLoginToast">Correct, redirecting."</string>
     <string name="incorrectLoginToast">Invalid credentials.</string>
     <string name="saveLogin">savelogin</string>
-    <string name="incorr_ip">"Invalid IP"</string>
+    <string name="incorrIp">"Invalid IP"</string>
 
     <!--Changing credentials-->
     <string name="oldPassHint">Old password</string>
@@ -42,7 +43,6 @@
     <string name="passCheckWrong">New password not set </string>
     <string name="passSet">Password changed </string>
     <string name="userSet">Username changed </string>
-    <string name="userNotSet">Username not changed (length under 5)</string>
 
     <!-- Changing device name-->
     <string name="cancelNameChange">Name of the device was not changed</string>
@@ -64,7 +64,7 @@
     <string name="serverFound">Server Found: </string>
     <string name="findServerTitle">"Find server"</string>
     <string name="setIpHint">Enter ip here</string>
-    <string name="versionToLow">Android version to low</string>
+    <string name="versionTooLow">Android version too low</string>
 
     <!-- Dialog build titles -->
     <string name="addDeviceTitle">new Add device</string>

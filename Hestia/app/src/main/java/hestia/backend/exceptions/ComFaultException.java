@@ -3,17 +3,18 @@ package hestia.backend.exceptions;
 public class ComFaultException extends Exception {
     private String error;
     private String message;
-
+    
     public ComFaultException(String error){
         this.error=error;
         this.message= "An error occured";
+
     }
 
-    public String getError(){
+    public String getError() {
         return error;
     }
 
-    public String getMessage(){
+    public String getMessage() {
         return message;
     }
 

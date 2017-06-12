@@ -48,6 +48,7 @@ public class DeviceListFragment extends Fragment {
     /**
      * This method replaces the non-default constructor in Android. The default constructor should
      * always be used in Android fragments, so we need to pass any other arguments using this method
+     *
      * @return The fragment which was constructed
      */
     public static DeviceListFragment newInstance() {
@@ -62,16 +63,17 @@ public class DeviceListFragment extends Fragment {
 
     /**
      * This method is called when the fragment view is created.
-     * @param inflater The layout inflater used to generate the layout hierarchy
+     *
+     * @param inflater  The layout inflater used to generate the layout hierarchy
      * @param container The viewgroup with which the layout is instantiated
      * @return A view of an expandable list linked to the listDataHeader and listDataChild
-     *         variables. Filling these lists will generate the GUI.
+     * variables. Filling these lists will generate the GUI.
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.context = getContext();
-        super.onCreateView(inflater,container,savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         View deviceListView = inflater.inflate(R.layout.device_list_fragment, container, false);
 
         createFloatingButton(deviceListView);
@@ -87,9 +89,9 @@ public class DeviceListFragment extends Fragment {
      * background so
      */
     public void populateUI() {
-        new AsyncTask<Object, String, ArrayList<Device> >() {
+        new AsyncTask<Object, String, ArrayList<Device>>() {
             @Override
-            protected ArrayList<Device>  doInBackground(Object... params) {
+            protected ArrayList<Device> doInBackground(Object... params) {
                 ArrayList<Device> devices = new ArrayList<>();
                 try {
                     devices = serverCollectionsInteractor.getDevices();
@@ -119,7 +121,7 @@ public class DeviceListFragment extends Fragment {
                     Log.i(TAG, "device found");
                     DeviceBar bar = new DeviceBar(getActivity().getSupportFragmentManager(),
                             getActivity(), device, serverCollectionsInteractor);
-                    if(!listDataChild.contains(bar)) {
+                    if (!listDataChild.contains(bar)) {
                         if (!typeExists(device)) {
                             listDataChild.add(new ArrayList<DeviceBar>());
                             listDataChild.get(listDataChild.size() - 1).add(bar);
@@ -135,14 +137,15 @@ public class DeviceListFragment extends Fragment {
     }
 
     /**
-     * This method checks whether a device of this type already exists. If it does, we can add the 
+     * This method checks whether a device of this type already exists. If it does, we can add the
      * device under this bar, if it does not, we need to make a new bar for this type.
+     *
      * @param device The device we are checking against the existing device bars
-     * @return A boolean indicating whether a device of this type is already in a devicebar 
+     * @return A boolean indicating whether a device of this type is already in a devicebar
      */
     private boolean typeExists(Device device) {
         String deviceType = device.getType();
-        for(ArrayList<DeviceBar> groupOfDevices : listDataChild) {
+        for (ArrayList<DeviceBar> groupOfDevices : listDataChild) {
             Device checkDevice = groupOfDevices.get(0).getDevice();
             if (checkDevice.getType().equals(deviceType)) {
                 return true;
@@ -154,12 +157,13 @@ public class DeviceListFragment extends Fragment {
     /**
      * Returns the index for the device with the current type, if a bar for this type already exists
      * in the UI. If it does not, we return -1.
+     *
      * @param device The device whose type we are checking
      * @return The index of the bar in the UI
      */
     private int getDeviceBarIndex(Device device) {
         String deviceType = device.getType();
-        for(ArrayList<DeviceBar> groupOfDevices : listDataChild) {
+        for (ArrayList<DeviceBar> groupOfDevices : listDataChild) {
             Device checkDevice = groupOfDevices.get(0).getDevice();
             if (checkDevice.getType().equals(deviceType)) {
                 return listDataChild.indexOf(groupOfDevices);
@@ -171,14 +175,15 @@ public class DeviceListFragment extends Fragment {
     private void setOnScrollListeners() {
         getExpListView().setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView absListView, int i) {}
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+            }
 
             @Override
             public void onScroll(AbsListView absListView, int i, int i1, int i2) {
                 int topRowVerticalPosition = (absListView == null ||
                         absListView.getChildCount() == 0) ? 0 :
                         absListView.getFirstVisiblePosition() == 0 ?
-                                absListView.getChildAt(0).getTop() : - 1;
+                                absListView.getChildAt(0).getTop() : -1;
                 swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
             }
         });
@@ -187,6 +192,7 @@ public class DeviceListFragment extends Fragment {
     /**
      * This method creates a new, empty listAdapter and adds it to the view it receives as a
      * parameter.
+     *
      * @param deviceListView The view which is to be filled with a listAdapter
      */
     private void initDeviceList(View deviceListView) {
@@ -200,6 +206,7 @@ public class DeviceListFragment extends Fragment {
     /**
      * This method refreshes the deviceList, possibly resulting in new devices being added, by
      * calling the populateUI method.
+     *
      * @param deviceListView
      */
     private void initRefreshLayout(View deviceListView) {
@@ -223,7 +230,7 @@ public class DeviceListFragment extends Fragment {
     }
 
     private void createFloatingButton(View view) {
-        floatingActionButton = (FloatingActionButton)view.findViewById(R.id.floating_action_button);
+        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.floating_action_button);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -234,10 +241,6 @@ public class DeviceListFragment extends Fragment {
                 fragment.show(getActivity().getSupportFragmentManager(), "dialog");
             }
         });
-    }
-
-    public ServerCollectionsInteractor getServerCollectionsInteractor() {
-        return serverCollectionsInteractor;
     }
 
     public ExpandableDeviceList getListAdapter() {

@@ -28,7 +28,7 @@ import hestia.backend.models.Device;
  * It loads all the slider activators, and sends the new state onRelease.
  */
 
-public class SlidersDialog extends Dialog implements android.view.View.OnClickListener{
+public class SlidersDialog extends Dialog implements android.view.View.OnClickListener {
     private Device device;
     private Context context;
     private final int maxInt = 100;
@@ -57,7 +57,7 @@ public class SlidersDialog extends Dialog implements android.view.View.OnClickLi
             subLayout.addView(name);
 
             Float currState = Float.parseFloat(activator.getState().getRawState().toString());
-            SeekBar bar = createSeekBar(currState ,count, activator);
+            SeekBar bar = createSeekBar(currState, count, activator);
             subLayout.addView(bar);
 
             mainLayout.addView(subLayout);
@@ -65,30 +65,32 @@ public class SlidersDialog extends Dialog implements android.view.View.OnClickLi
         }
     }
 
-    private SeekBar createSeekBar(float progress, int count, final Activator activator){
-        SeekBar bar = setSeekBarProps(progress,count);
+    private SeekBar createSeekBar(float progress, int count, final Activator activator) {
+        SeekBar bar = setSeekBarProps(progress, count);
         bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                float value = (float)seekBar.getProgress()/maxInt;
+                float value = (float) seekBar.getProgress() / maxInt;
                 final ActivatorState<Float> state = activator.getState();
                 state.setRawState(value);
-                executeAsyncTask(activator,state);
+                executeAsyncTask(activator, state);
             }
         });
         return bar;
     }
 
-    private SeekBar setSeekBarProps(float progress, int count){
+    private SeekBar setSeekBarProps(float progress, int count) {
         SeekBar bar = new SeekBar(context);
         bar.setMax(maxInt);
-        bar.setProgress((int)(progress * maxInt));
+        bar.setProgress((int) (progress * maxInt));
         bar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 80));
         bar.setId(count);
         return bar;
@@ -104,7 +106,7 @@ public class SlidersDialog extends Dialog implements android.view.View.OnClickLi
                     isSuccessful = true;
                 } catch (IOException e) {
                     Log.e(TAG, e.toString());
-                    String exceptionMessage = HestiaApplication.getContext()
+                    String exceptionMessage = context.getResources()
                             .getString(R.string.serverNotFound);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
@@ -128,10 +130,10 @@ public class SlidersDialog extends Dialog implements android.view.View.OnClickLi
      * This methods creates a list of sliders, i.e. a list of activators of type "float".
      * @return the list of sliders of the device.
      */
-    private ArrayList<Activator> getSliders(){
-        ArrayList<Activator> sliders =  new ArrayList<>();
-        for(Activator activator : device.getActivators()){
-            if(activator.getState().getType().equals("float")){
+    private ArrayList<Activator> getSliders() {
+        ArrayList<Activator> sliders = new ArrayList<>();
+        for (Activator activator : device.getActivators()) {
+            if (activator.getState().getType().equals("float")) {
                 sliders.add(activator);
             }
         }

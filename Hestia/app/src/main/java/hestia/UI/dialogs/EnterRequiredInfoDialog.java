@@ -45,9 +45,9 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
     /**
      * This setter is used to set the information for the dialog after the
      * AddDeviceDialog has created it.
-     * @param info The requiredInfo which was obtained from the server by the AddDeviceDialog
-     * @param serverCollectionsInteractor The object used for interacting with the server
      *
+     * @param info                        The requiredInfo which was obtained from the server by the AddDeviceDialog
+     * @param serverCollectionsInteractor The object used for interacting with the server
      * @see AddDeviceDialog
      */
     public void setData(RequiredInfo info, ServerCollectionsInteractor serverCollectionsInteractor) {
@@ -77,7 +77,7 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         for (final String key : fields.keySet()) {
-            EditText field = createEditText(key, editParams , count, fields);
+            EditText field = createEditText(key, editParams, count, fields);
             if (field.getId() == 0) {
                 field.requestFocus();
 
@@ -96,7 +96,7 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
         layout.setLayoutParams(params);
         float scale = getResources().getDisplayMetrics().density;
         int padding = 8;
-        int dpAsPixels = (int) (padding*scale + 0.5f);
+        int dpAsPixels = (int) (padding * scale + 0.5f);
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(0, dpAsPixels, 0, 0);
     }
@@ -108,7 +108,7 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
         field.setHint(key);
         field.setInputType(InputType.TYPE_CLASS_TEXT);
         field.setMaxLines(1);
-        field.setFilters(new InputFilter[] {new InputFilter.LengthFilter(15)});
+        field.setFilters(new InputFilter[]{new InputFilter.LengthFilter(15)});
         field.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 
 
@@ -127,7 +127,7 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
                 return true;
             }
         });
-        if (key.equals(getString(R.string.fixedFieldCol))||
+        if (key.equals(getString(R.string.fixedFieldCol)) ||
                 key.equals(getString(R.string.fixedFieldPlugin))) {
             field.setFocusable(false);
             field.setClickable(false);
@@ -150,7 +150,7 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
                 try {
                     serverCollectionsInteractor.addDevice(info);
                 } catch (IOException e) {
-                    Log.e(TAG,e.toString());
+                    Log.e(TAG, e.toString());
                     String exceptionMessage = getString(R.string.serverNotFound);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
@@ -177,7 +177,7 @@ public class EnterRequiredInfoDialog extends HestiaDialog {
      */
     private void updateRequiredInfo(View v) {
         int count = 0;
-        for(String key : this.info.getInfo().keySet()) {
+        for (String key : this.info.getInfo().keySet()) {
             EditText field = (EditText) v.findViewById(count);
             String valueField = field.getText().toString();
 

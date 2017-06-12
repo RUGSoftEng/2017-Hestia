@@ -8,9 +8,10 @@ import com.rugged.application.hestia.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 import hestia.UI.HestiaApplication;
-import hestia.backend.exceptions.ComFaultException;
 import hestia.backend.NetworkHandler;
+import hestia.backend.exceptions.ComFaultException;
 
 /**
  * Represents the internal representation of the device class on the client. The device contains an
@@ -22,6 +23,7 @@ import hestia.backend.NetworkHandler;
  * or an intensity slider.
  * Finally, there is an instance of NetworkHandler, which holds information needed to send
  * data to the server via a POST request when the name is changed.
+ *
  * @see Activator
  */
 
@@ -62,7 +64,7 @@ public class Device {
 
     public void setHandler(NetworkHandler handler) {
         this.handler = handler;
-        for(Activator activator : activators) {
+        for (Activator activator : activators) {
             activator.setHandler(handler);
         }
     }
@@ -77,9 +79,9 @@ public class Device {
         object.addProperty("name", name);
         JsonElement payload = handler.PUT(object, endpoint);
 
-        if(payload != null && payload.isJsonObject()) {
+        if (payload != null && payload.isJsonObject()) {
             JsonObject payloadObject = payload.getAsJsonObject();
-            if(payloadObject.has("error")) {
+            if (payloadObject.has("error")) {
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 Gson gson = gsonBuilder.create();
                 ComFaultException comFaultException = gson.fromJson(payload, ComFaultException.class);
@@ -99,13 +101,13 @@ public class Device {
 
     @Override
     public boolean equals(Object object) {
-        if(!(object instanceof Device)) return false;
+        if (!(object instanceof Device)) return false;
         Device device = (Device) object;
         return (this == device || (this.getId().equals(device.getId()) &&
-                                   this.getName().equals(device.getName()) &&
-                                   this.getType().equals(device.getType()) &&
-                                   this.getActivators().equals(device.getActivators()) &&
-                                   this.getHandler().equals(device.getHandler())));
+                this.getName().equals(device.getName()) &&
+                this.getType().equals(device.getType()) &&
+                this.getActivators().equals(device.getActivators()) &&
+                this.getHandler().equals(device.getHandler())));
 
     }
 
@@ -120,7 +122,7 @@ public class Device {
         return result;
     }
 
-    public String toString(){
-        return name +" "+ deviceId + " " + activators + "\n";
+    public String toString() {
+        return name + " " + deviceId + " " + activators + "\n";
     }
 }

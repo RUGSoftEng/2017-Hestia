@@ -107,12 +107,9 @@ public class ServerCollectionsInteractorTest {
         // Creates a dummy error JsonObject.
         JsonObject errorObject = new JsonObject();
         JsonElement error = new JsonObject();
-        GsonBuilder gsonBuilder=new GsonBuilder();
-        Gson gson= gsonBuilder.create();
         JsonParser parser = new JsonParser();
-        parser.parse()
-        error.addProperty("exception","ComFaultException");
-        errorObject.("error", "error_field");
+        error=parser.parse("{exception:\"ComFaultException\"}");
+        errorObject.add("error", error);
         when(mockHandlerFail.GET(any(String.class))).thenReturn(errorObject);
         dummyServerCollectionsInteractor.setHandler(mockHandlerFail);
 
@@ -172,8 +169,10 @@ public class ServerCollectionsInteractorTest {
 
         // Creates a dummy error JsonObject.
         JsonObject errorObject = new JsonObject();
-        errorObject.addProperty("error", "error_field");
-        errorObject.addProperty("message", "message_field");
+        JsonElement error = new JsonObject();
+        JsonParser parser = new JsonParser();
+        error=parser.parse("{exception:\"ComFaultException\"}");
+        errorObject.add("error", error);
         when(mockHandlerFail.POST(any(JsonObject.class), any(String.class))).thenReturn(errorObject);
         dummyServerCollectionsInteractor.setHandler(mockHandlerFail);
 
@@ -239,8 +238,10 @@ public class ServerCollectionsInteractorTest {
 
         // Creates a dummy error JsonObject.
         JsonObject errorObject = new JsonObject();
-        errorObject.addProperty("error", "error_field");
-        errorObject.addProperty("message", "message_field");
+        JsonElement error = new JsonObject();
+        JsonParser parser = new JsonParser();
+        error=parser.parse("{exception:\"ComFaultException\"}");
+        errorObject.add("error", error);
         when(mockHandlerFail.DELETE(any(String.class))).thenReturn(errorObject);
         dummyServerCollectionsInteractor.setHandler(mockHandlerFail);
 
@@ -295,8 +296,10 @@ public class ServerCollectionsInteractorTest {
 
         // Creates a dummy error JsonObject.
         JsonObject errorObject = new JsonObject();
-        errorObject.addProperty("error", "error_field");
-        errorObject.addProperty("message", "message_field");
+        JsonElement error = new JsonObject();
+        JsonParser parser = new JsonParser();
+        error=parser.parse("{exception:\"ComFaultException\"}");
+        errorObject.add("error", error);
         when(mockHandlerFail.GET(any(String.class))).thenReturn(errorObject);
         dummyServerCollectionsInteractor.setHandler(mockHandlerFail);
 
@@ -348,8 +351,10 @@ public class ServerCollectionsInteractorTest {
 
         // Creates a dummy error JsonObject.
         JsonObject errorObject = new JsonObject();
-        errorObject.addProperty("error", "error_field");
-        errorObject.addProperty("message", "message_field");
+        JsonElement error = new JsonObject();
+        JsonParser parser = new JsonParser();
+        error=parser.parse("{exception:\"ComFaultException\"}");
+        errorObject.add("error", error);
         when(mockHandlerFail.GET(any(String.class))).thenReturn(errorObject);
         dummyServerCollectionsInteractor.setHandler(mockHandlerFail);
 
@@ -422,8 +427,10 @@ public class ServerCollectionsInteractorTest {
 
         // Creates a dummy error JsonObject.
         JsonObject errorObject = new JsonObject();
-        errorObject.addProperty("error", "error_field");
-        errorObject.addProperty("message", "message_field");
+        JsonElement error = new JsonObject();
+        JsonParser parser = new JsonParser();
+        error=parser.parse("{exception:\"ComFaultException\"}");
+        errorObject.add("error", error);
         when(mockHandlerFail.GET(any(String.class))).thenReturn(errorObject);
         dummyServerCollectionsInteractor.setHandler(mockHandlerFail);
 

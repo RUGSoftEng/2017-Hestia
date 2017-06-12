@@ -28,10 +28,9 @@ import hestia.backend.models.ActivatorState;
 import hestia.backend.models.Device;
 
 /**
- *  This class takes care of the deviceBar.
- * The DeviceBar is the 'row' in the expandable list of a single device.
+ * This class takes care of the deviceBar.
+ * The DeviceBar represents a 'row' in the expandable list of a single device.
  */
-
 public class DeviceBar extends RelativeLayout {
     private Activity context;
     private Device device;
@@ -57,31 +56,31 @@ public class DeviceBar extends RelativeLayout {
 
         ImageView imageview = (ImageView) this.findViewById(R.id.imageview);
 
-        final Switch switc = (Switch)this.findViewById(R.id.light_switch);
-        switc.setEnabled(false);
-        switc.setVisibility(View.INVISIBLE);
+        final Switch hestiaSwitch = (Switch) this.findViewById(R.id.light_switch);
+        hestiaSwitch.setEnabled(false);
+        hestiaSwitch.setVisibility(View.INVISIBLE);
 
-        for(final Activator activator : device.getActivators()){
+        for (final Activator activator : device.getActivators()) {
             int toggleRank = Integer.valueOf(context.getResources().getString(R.string.toggleRank));
-            if(activator.getRank() == toggleRank) {
-                if(activator.getState().getType().equals("bool")){
-                    switc.setEnabled(true);
-                    switc.setVisibility(View.VISIBLE);
+            if (activator.getRank() == toggleRank) {
+                if (activator.getState().getType().equals("bool")) {
+                    hestiaSwitch.setEnabled(true);
+                    hestiaSwitch.setVisibility(View.VISIBLE);
                     final ActivatorState<Boolean> state = activator.getState();
-                    switc.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    hestiaSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                         @Override
                         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            state.setRawState(switc.isChecked());
+                            state.setRawState(hestiaSwitch.isChecked());
                             checked(state, activator);
                         }
                     });
-                    switc.setChecked(state.getRawState());
+                    hestiaSwitch.setChecked(state.getRawState());
                 }
                 break;
             }
         }
 
-        if(deviceHasSlider()) {
+        if (deviceHasSlider()) {
             this.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -119,7 +118,7 @@ public class DeviceBar extends RelativeLayout {
         });
     }
 
-    private PopupMenu createPopupMenu(View view){
+    private PopupMenu createPopupMenu(View view) {
         PopupMenu popup = new PopupMenu(getContext(), view);
         popup.getMenuInflater().inflate(R.menu.popup, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -141,11 +140,11 @@ public class DeviceBar extends RelativeLayout {
             }
         });
         return popup;
-   }
+    }
 
-    private boolean deviceHasSlider(){
-        for(Activator activator : device.getActivators()){
-            if(activator.getState().getType().equals("float")){
+    private boolean deviceHasSlider() {
+        for (Activator activator : device.getActivators()) {
+            if (activator.getState().getType().equals("float")) {
                 return true;
             }
         }
@@ -169,8 +168,8 @@ public class DeviceBar extends RelativeLayout {
                     activator.setState(state);
                     isSuccessful = true;
                 } catch (IOException e) {
-                    Log.e(TAG,e.toString());
-                    String exceptionMessage = HestiaApplication.getContext().
+                    Log.e(TAG, e.toString());
+                    String exceptionMessage = context.getResources().
                             getString(R.string.serverNotFound);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
@@ -199,8 +198,9 @@ public class DeviceBar extends RelativeLayout {
                     serverCollectionsInteractor.removeDevice(device);
                     isSuccessful = true;
                 } catch (IOException e) {
-                    Log.e(TAG,e.toString());
-                    String exceptionMessage = "Could not connect to the server";
+                    Log.e(TAG, e.toString());
+                    String exceptionMessage = context.getResources()
+                            .getString(R.string.serverNotFound);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {
                     Log.e(TAG, comFaultException.toString());
@@ -221,14 +221,13 @@ public class DeviceBar extends RelativeLayout {
 
     @Override
     public boolean equals(Object object) {
-        if(!(object instanceof DeviceBar)) return false;
+        if (!(object instanceof DeviceBar)) return false;
         DeviceBar deviceBar = (DeviceBar) object;
         return (this == deviceBar || (this.getDevice().equals(deviceBar.getDevice())));
     }
 
     @Override
     public int hashCode() {
-        int result = getDevice().hashCode();
-        return result;
+        return getDevice().hashCode();
     }
 }

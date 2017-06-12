@@ -67,7 +67,7 @@ public class DiscoverServerDialog extends HestiaDialog {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             discoverServer();
         } else {
-            status.setText(R.string.versionToLow);
+            status.setText(R.string.versionTooLow);
         }
 
         return view;
@@ -120,11 +120,10 @@ public class DiscoverServerDialog extends HestiaDialog {
     @Override
     void pressConfirm() {
         String ip = ipField.getText().toString();
-        if(checkIp(ip)) {
+        if (checkIp(ip)) {
             handler.setIp(ip);
         } else {
-            Toast.makeText(getContext(),getString(R.string.incorr_ip),Toast.LENGTH_SHORT).show();
-            refreshUserInterface();
+            Toast.makeText(getContext(), getString(R.string.incorrIp), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -166,7 +165,8 @@ public class DiscoverServerDialog extends HestiaDialog {
 
             @Override
             public void onDiscoveryStopped(String serviceType) {
-                Log.d(TAG, "Discovery stopped: " + serviceType);;
+                Log.d(TAG, "Discovery stopped: " + serviceType);
+                ;
                 Handler mainHandler = new Handler(DiscoverServerDialog.this.getContext().getMainLooper());
                 Runnable myRunnable = new Runnable() {
                     @Override

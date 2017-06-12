@@ -12,12 +12,12 @@ import com.rugged.application.hestia.R;
 import hestia.UI.activities.login.LoginActivity;
 
 import static com.rugged.application.hestia.R.string.standardPass;
-import static com.rugged.application.hestia.R.string.standardUser;
 import static hestia.UI.activities.login.LoginActivity.hashString;
 
 /**
  * This class opens the dialog to change the username and password to login.
  * It uses some of the static variables and the static hashing function from the LoginActivity.
+ *
  * @see LoginActivity
  */
 public class ChangeCredentialsDialog extends HestiaDialog {
@@ -59,22 +59,16 @@ public class ChangeCredentialsDialog extends HestiaDialog {
         String newPassCheck = newPassCheckField.getText().toString();
         String oldPass = oldPassField.getText().toString();
         loginPreferences = getActivity().getSharedPreferences(getString(R.string.loginPrefs)
-                ,Context.MODE_PRIVATE);
+                , Context.MODE_PRIVATE);
 
         String feedback = "";
         if(checkOldPass(oldPass)){
-            if(newPass.equals(newPassCheck) && !newPass.equals("")){
-                setSharedPrefs(getString(R.string.loginPrefsPass
-                ), hashString(newPass));
-                feedback = getString(R.string.passSet);
-            } else{
-                feedback = getString(R.string.passCheckWrong);
-            }
-            if(newUser.length()>4){
+            if(newPass.equals(newPassCheck) && !newPass.equals("") && newUser.length()>4){
+                setSharedPrefs(getString(R.string.loginPrefsPass), hashString(newPass));
                 setSharedPrefs(getString(R.string.loginPrefsUser),hashString(newUser));
-                feedback = feedback + getString(R.string.userSet);
+                feedback = getString(R.string.passSet);
             } else {
-                feedback = feedback + getString(R.string.userNotSet);
+                feedback = getString(R.string.passCheckWrong);
             }
             showToast(feedback);
         } else {
@@ -91,23 +85,24 @@ public class ChangeCredentialsDialog extends HestiaDialog {
         refreshUserInterface();
     }
 
-    private boolean checkOldPass(String oldPass){
+    private boolean checkOldPass(String oldPass) {
         String corrpass = loginPreferences.getString(getString(R.string.loginPrefsPass), hashString(getString(standardPass)));
         return corrpass.equals(hashString(oldPass));
     }
 
     /**
      * A method for changing the value of a specific resource stored in the system.
-     * @param name The key of the string as it is stored in the system
+     *
+     * @param name  The key of the string as it is stored in the system
      * @param value The new value for the string in the system
      */
-    private void setSharedPrefs(String name, String value){
+    private void setSharedPrefs(String name, String value) {
         SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
         loginPrefsEditor.putString(name, value);
         loginPrefsEditor.apply();
     }
 
-    private void showToast(String text){
-        Toast.makeText(getActivity(), text , Toast.LENGTH_LONG).show();
+    private void showToast(String text) {
+        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
     }
 }

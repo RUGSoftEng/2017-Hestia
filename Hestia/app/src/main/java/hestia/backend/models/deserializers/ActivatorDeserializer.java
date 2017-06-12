@@ -17,6 +17,7 @@ import hestia.backend.models.ActivatorState;
  * A JSON deserializer for the Activator class.
  * It implements Google's JsonDeserializer interface, and it is used by GSON to deserialize the
  * activators in a device.
+ *
  * @see Activator
  */
 
@@ -24,7 +25,8 @@ public class ActivatorDeserializer implements JsonDeserializer<Activator> {
 
     /**
      * Deserializes a JSON object, creating an Activator.
-     * @param json the JSON object to be deserialized
+     *
+     * @param json    the JSON object to be deserialized
      * @param typeOfT the type of the Object to deserialize to
      * @param context the current context of application
      * @return a deserialized object of the specified type Activator
@@ -35,19 +37,20 @@ public class ActivatorDeserializer implements JsonDeserializer<Activator> {
             throws JsonParseException {
 
         JsonObject jsonObject = (JsonObject) json;
-        Log.i("JSONOBJECT - ACTIVATORS",jsonObject.toString());
+        Log.i("JSONOBJECT - ACTIVATORS", jsonObject.toString());
         String stateType = jsonObject.get("type").getAsString();
         String rawState = jsonObject.get("state").getAsString();
         ActivatorState state = null;
 
         switch (stateType.toLowerCase()) {
             case "bool":
-                state = new ActivatorState<Boolean>(Boolean.parseBoolean(rawState),"bool");
+                state = new ActivatorState<Boolean>(Boolean.parseBoolean(rawState), "bool");
                 break;
-            case "float" :
-                state = new ActivatorState<Float>(Float.parseFloat(rawState),"float");
+            case "float":
+                state = new ActivatorState<Float>(Float.parseFloat(rawState), "float");
                 break;
-            default : break;
+            default:
+                break;
         }
 
         String activatorId = jsonObject.get("activatorId").getAsString();

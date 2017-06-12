@@ -67,7 +67,7 @@ public class ChangeNameDialog extends HestiaDialog {
                     device.setName(result);
                     isSuccessful = true;
                 } catch (IOException e) {
-                    Log.e(TAG,e.toString());
+                    Log.e(TAG, e.toString());
                     String exceptionMessage = getString(R.string.serverNotFound);
                     publishProgress(exceptionMessage);
                 } catch (ComFaultException comFaultException) {

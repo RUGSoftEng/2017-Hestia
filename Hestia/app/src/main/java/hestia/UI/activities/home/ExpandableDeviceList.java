@@ -19,7 +19,7 @@ import hestia.UI.elements.DeviceBar;
  * and adds compiles them to an Expandable List. It also checks which options should be visible, and
  * adds listeners to these options in the popup menu.
  */
-public class ExpandableDeviceList extends BaseExpandableListAdapter{
+public class ExpandableDeviceList extends BaseExpandableListAdapter {
     private ArrayList<ArrayList<DeviceBar>> listDataChild;
     private Context context;
 
@@ -35,6 +35,7 @@ public class ExpandableDeviceList extends BaseExpandableListAdapter{
 
     /**
      * Simply returns the position of the child we are looking for
+     *
      * @param groupPosition Enforced by Android, we don' t use this here
      * @param childPosition We simply return this parameter
      * @return The value of childPosition
@@ -46,12 +47,13 @@ public class ExpandableDeviceList extends BaseExpandableListAdapter{
 
     /**
      * Returns the deviceBar, as a view, of a particular group and childposition.
+     *
      * @param groupPosition The position of the group in the list of deviceBars
      * @param childPosition The position of the child in the group
-     * @param isLastChild A boolean indicating whether the indicated child is the last one
-     * @param convertView The view which could be reused, this comes from Android and we don't use
-     *                    it here
-     * @param parent The parent view, which we also don't need to get our DeviceBar
+     * @param isLastChild   A boolean indicating whether the indicated child is the last one
+     * @param convertView   The view which could be reused, this comes from Android and we don't use
+     *                      it here
+     * @param parent        The parent view, which we also don't need to get our DeviceBar
      * @return Returns the deviceBar indicated
      */
     @Override
@@ -63,6 +65,7 @@ public class ExpandableDeviceList extends BaseExpandableListAdapter{
 
     /**
      * Returns the number of children in a particular group.
+     *
      * @param groupPosition The group in which we are interested
      * @return The number of children in the group
      */
@@ -74,6 +77,7 @@ public class ExpandableDeviceList extends BaseExpandableListAdapter{
     /**
      * Returns the data associated with the specified group, in this case the ArrayList of type
      * DeviceBar associated with the groupPosition.
+     *
      * @param groupPosition The index of the ArrayList of DeviceBars we want
      * @return The DeviceBar list as an Object
      */
@@ -101,10 +105,11 @@ public class ExpandableDeviceList extends BaseExpandableListAdapter{
 
     /**
      * This method returns a specific groupView based on its index.
+     *
      * @param groupPosition The index of the List of DeviceBar in the List of Lists
-     * @param isExpanded A boolean indicating whether the list we are referring to is expanded
-     * @param convertView The view which can be reused, we return it after modifying the header
-     * @param parent The parent to which this view will be attached
+     * @param isExpanded    A boolean indicating whether the list we are referring to is expanded
+     * @param convertView   The view which can be reused, we return it after modifying the header
+     * @param parent        The parent to which this view will be attached
      * @return The specific groupView, consisting of a main bar and some devices under it
      */
     @Override
@@ -119,7 +124,7 @@ public class ExpandableDeviceList extends BaseExpandableListAdapter{
             convertView = layoutInflater.inflate(R.layout.expandable_device_list, null);
         }
 
-        TextView lblListHeader = (TextView) convertView .findViewById(R.id.lblListHeader);
+        TextView lblListHeader = (TextView) convertView.findViewById(R.id.lblListHeader);
         lblListHeader.setTypeface(null, Typeface.BOLD);
         lblListHeader.setText(headerTitle);
 
@@ -137,15 +142,17 @@ public class ExpandableDeviceList extends BaseExpandableListAdapter{
 
     /**
      * A simple setter for the listData
+     *
      * @param listDataChild The listData which we will use to replace the current data
      */
-    public void setListData(ArrayList<ArrayList<DeviceBar>> listDataChild){
+    public void setListData(ArrayList<ArrayList<DeviceBar>> listDataChild) {
         this.listDataChild = listDataChild;
     }
 
     /**
      * Shows us whether the child at the specified position is selectable. In our code, this is
      * always the case.
+     *
      * @param groupPosition The group index
      * @param childPosition The child index within the specified group
      * @return Always returns true, we never make children unselectable

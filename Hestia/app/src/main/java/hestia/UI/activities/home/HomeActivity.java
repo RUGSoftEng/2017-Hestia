@@ -10,19 +10,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.rugged.application.hestia.R;
 import com.yalantis.contextmenu.lib.ContextMenuDialogFragment;
 import com.yalantis.contextmenu.lib.MenuObject;
 import com.yalantis.contextmenu.lib.MenuParams;
 import com.yalantis.contextmenu.lib.interfaces.OnMenuItemClickListener;
 
-import com.rugged.application.hestia.R;
 import java.util.ArrayList;
 import java.util.List;
+
 import hestia.UI.HestiaApplication;
 import hestia.UI.activities.login.LoginActivity;
 import hestia.UI.dialogs.ChangeCredentialsDialog;
-import hestia.backend.ServerCollectionsInteractor;
 import hestia.backend.NetworkHandler;
+import hestia.backend.ServerCollectionsInteractor;
+
+import static com.rugged.application.hestia.R.id.fragment_container;
+import static com.rugged.application.hestia.R.id.swipe_refresh;
 
 /**
  * This activity marks the main screen for the app. It contains the serverCollectionsInteractor for
@@ -50,7 +55,7 @@ public class HomeActivity extends AppCompatActivity implements OnMenuItemClickLi
         fragmentManager = getSupportFragmentManager();
         DeviceListFragment fragment = DeviceListFragment.newInstance();
         fragment.setServerCollectionsInteractor(this.serverCollectionsInteractor);
-        fragmentManager.beginTransaction().add(R.id.fragment_container, fragment).commit();
+        fragmentManager.beginTransaction().add(fragment_container, fragment).commit();
         menuObjects = getMenuObjects();
 
         initMenuFragment();
@@ -91,7 +96,7 @@ public class HomeActivity extends AppCompatActivity implements OnMenuItemClickLi
      * communicating with the server.
      */
     private void setupServerCollectionInteractor() {
-        NetworkHandler handler = ((HestiaApplication)this.getApplication()).getNetworkHandler();
+        NetworkHandler handler = ((HestiaApplication) this.getApplication()).getNetworkHandler();
         this.serverCollectionsInteractor = new ServerCollectionsInteractor(handler);
     }
 
@@ -100,7 +105,7 @@ public class HomeActivity extends AppCompatActivity implements OnMenuItemClickLi
      * occurred.
      */
     public void refreshUserInterface(){
-        DeviceListFragment fragment = (DeviceListFragment) fragmentManager.findFragmentByTag("DeviceListFragment");
+        DeviceListFragment fragment = (DeviceListFragment) fragmentManager.findFragmentById(fragment_container);
         if(fragment != null){
             fragment.populateUI();
         }
@@ -152,7 +157,7 @@ public class HomeActivity extends AppCompatActivity implements OnMenuItemClickLi
 
     @Override
     public void onMenuItemClick(View clickedView, int position) {
-        switch(position) {
+        switch (position) {
             case CHANGECREDENTIALS:
                 showChangeCredentialsDialog();
                 break;
@@ -164,14 +169,23 @@ public class HomeActivity extends AppCompatActivity implements OnMenuItemClickLi
         }
     }
 
-    private void gotoLoginActivity() {
+    public void gotoLoginActivity() {
         Intent toIntent = new Intent(HomeActivity.this, LoginActivity.class);
         toIntent.putExtra(getString(R.string.login), getString(R.string.logoutExtraValue));
         startActivity(toIntent);
         finish();
     }
-    private void showChangeCredentialsDialog() {
+
+    public void showChangeCredentialsDialog() {
         ChangeCredentialsDialog fragment = ChangeCredentialsDialog.newInstance();
         fragment.show(getSupportFragmentManager(), "dialog");
+    }
+
+    public void setServerCollectionsInteractor(ServerCollectionsInteractor serverCollectionsInteractor){
+        this.serverCollectionsInteractor = serverCollectionsInteractor;
+        DeviceListFragment fragment = (DeviceListFragment) fragmentManager.findFragmentById(fragment_container);
+        if(fragment != null){
+            fragment.setServerCollectionsInteractor(serverCollectionsInteractor);
+        }
     }
 }

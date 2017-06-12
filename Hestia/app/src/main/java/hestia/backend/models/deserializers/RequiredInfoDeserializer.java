@@ -17,7 +17,8 @@ public class RequiredInfoDeserializer implements JsonDeserializer<RequiredInfo> 
 
     /**
      * Deserializes a JSON object, creating a RequiredInfo.
-     * @param json the JSON object to be deserialized
+     *
+     * @param json    the JSON object to be deserialized
      * @param typeOfT the type of the Object to deserialize to
      * @param context the current context of application
      * @return a deserialized object of the specified type RequiredInfo
@@ -32,7 +33,8 @@ public class RequiredInfoDeserializer implements JsonDeserializer<RequiredInfo> 
 
         JsonObject required_info_json = jsonInfo.get("required_info").getAsJsonObject();
         Gson gson = new Gson();
-        HashMap<String, String> required_info = gson.fromJson(required_info_json, new TypeToken<HashMap<String, String>>(){}.getType());
+        HashMap<String, String> required_info = gson.fromJson(required_info_json, new TypeToken<HashMap<String, String>>() {
+        }.getType());
 
         return new RequiredInfo(collection, plugin, required_info);
     }
